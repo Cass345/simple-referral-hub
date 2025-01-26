@@ -3,13 +3,29 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-// Mock data - in a real app this would come from your backend
 const mockProgressData = {
   currentStep: 4,
   totalSteps: 9,
@@ -34,8 +50,28 @@ const studentData = [
   { name: "Week 5", incidents: 4 },
 ];
 
+const prioritizedBehaviors = [
+  {
+    behavior: "Difficulty staying on task",
+    frequency: "Daily",
+    duration: "5-10 mins",
+    intensity: "Moderate",
+    priority: "High",
+  },
+  {
+    behavior: "Disruptive vocalizations",
+    frequency: "Several times per day",
+    duration: "Less than 5 mins",
+    intensity: "Mild",
+    priority: "Medium",
+  },
+];
+
 const ProgressTracking = () => {
   const progress = (mockProgressData.currentStep / mockProgressData.totalSteps) * 100;
+  const [selectedDataMethod, setSelectedDataMethod] = useState("frequency");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -82,6 +118,81 @@ const ProgressTracking = () => {
               </Button>
             </div>
           ))}
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="text-xl font-semibold mb-4">Prioritized Behaviors</h2>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Behavior</TableHead>
+                <TableHead>Frequency</TableHead>
+                <TableHead>Duration</TableHead>
+                <TableHead>Intensity</TableHead>
+                <TableHead>Priority</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {prioritizedBehaviors.map((behavior) => (
+                <TableRow key={behavior.behavior}>
+                  <TableCell>{behavior.behavior}</TableCell>
+                  <TableCell>{behavior.frequency}</TableCell>
+                  <TableCell>{behavior.duration}</TableCell>
+                  <TableCell>{behavior.intensity}</TableCell>
+                  <TableCell>
+                    <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      ${behavior.priority === 'High' ? 'bg-red-100 text-red-800' :
+                      behavior.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'}`}>
+                      {behavior.priority}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="text-xl font-semibold mb-4">Baseline Data Collection</h2>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Data Collection Method</label>
+              <Select value={selectedDataMethod} onValueChange={setSelectedDataMethod}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="frequency">Frequency Count</SelectItem>
+                  <SelectItem value="duration">Duration Recording</SelectItem>
+                  <SelectItem value="abc">ABC Chart</SelectItem>
+                  <SelectItem value="interval">Interval Recording</SelectItem>
+                  <SelectItem value="intensity">Intensity Scale</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Collection Period</label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  placeholder="Start Date"
+                />
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  placeholder="End Date"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </Card>
 
