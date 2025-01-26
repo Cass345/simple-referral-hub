@@ -15,6 +15,8 @@ import ProgressTracking from "./pages/ProgressTracking";
 import Tier1Resources from "./pages/Tier1Resources";
 import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
+import TargetBehaviors from "./pages/TargetBehaviors";
+import EvaluateBehavior from "./pages/EvaluateBehavior";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ const App = () => (
                 <Route path="/tier1-resources" element={<Tier1Resources />} />
                 <Route path="/resources" element={<Resources />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/target-behaviors" element={<TargetBehaviors />} />
+                <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
               </Routes>
             </main>
           </div>
