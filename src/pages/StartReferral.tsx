@@ -11,15 +11,38 @@ import { DataCollection } from "@/components/referralform/DataCollection";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
+import type { ReferralFormData } from '@/types/referral';
 
 type Section = 'intro' | 'teacherInfo' | 'studentBackground' | 'referralReason' | 'behaviorId' | 'behaviorEval' | 'goals' | 'data' | 'review';
 
 const StartReferral = () => {
   const [currentSection, setCurrentSection] = useState<Section>('intro');
-  const [formData, setFormData] = useState({
-    teacherInfo: {},
-    studentBackground: {},
-    referralReason: {},
+  const [formData, setFormData] = useState<ReferralFormData>({
+    teacherInfo: {
+      teacherName: '',
+      classroomNumber: '',
+      studentName: '',
+      studentAge: '',
+      studentSchedule: ''
+    },
+    studentBackground: {
+      firstName: '',
+      lastName: '',
+      grade: 0,
+      dob: '',
+      studentId: '',
+      primaryLanguage: '',
+      parentName: '',
+      parentEmail: '',
+      parentPhone: '',
+      parentNotificationDate: '',
+      strengths: []
+    },
+    referralReason: {
+      reasons: [],
+      concerns: [],
+      description: ''
+    },
     behaviors: [],
     goals: [],
     dataCollection: {}
