@@ -18,7 +18,11 @@ interface Behavior {
   name: string;
   category: string;
   description: string;
-  evaluation?: any;
+  evaluation?: {
+    method: string;
+    frequency: string;
+    criteria: string;
+  };
 }
 
 interface GoalSettingProps {

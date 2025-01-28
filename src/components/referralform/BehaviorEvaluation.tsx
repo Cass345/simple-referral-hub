@@ -32,7 +32,7 @@ export function BehaviorEvaluation({ behaviors, onSubmit, onBack }: BehaviorEval
     onSubmit(evaluatedBehaviors);
   };
 
-  const updateBehaviorEvaluation = (index: number, field: keyof BehaviorEvaluation, value: any) => {
+  const updateBehaviorEvaluation = (index: number, field: keyof BehaviorEvaluation, value: string | string[]) => {
     setEvaluatedBehaviors(prev => prev.map((behavior, i) => {
       if (i === index) {
         return {

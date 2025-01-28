@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface StudentBackgroundData {
+  dob: string;
+  primaryLanguage: string;
+  parentName: string;
+  parentContact: string;
+  parentNotificationDate: string;
+}
+
 interface StudentBackgroundProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: StudentBackgroundData) => void;
   onBack: () => void;
-  initialData?: any;
+  initialData?: Partial<StudentBackgroundData>;
 }
 
 export function StudentBackground({ onSubmit, onBack, initialData = {} }: StudentBackgroundProps) {

@@ -1,10 +1,19 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface ReferralFormData {
+  reasons: {
+    academic: boolean;
+    behavior: boolean;
+    socialEmotional: boolean;
+  };
+  strengths: string[];
+}
+
 interface ReferralReasonProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ReferralFormData) => void;
   onBack: () => void;
-  initialData?: any;
+  initialData?: Partial<ReferralFormData>;
 }
 
 export function ReferralReason({ onSubmit, onBack, initialData = {} }: ReferralReasonProps) {

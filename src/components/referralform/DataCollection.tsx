@@ -26,27 +26,59 @@ interface DataCollectionProps {
 const dataCollectionTypes = [
   {
     value: 'frequency',
-    label: 'Frequency Count',
+    label: 'Frequency/Event & Rate Recording',
     description: 'Count how often the behavior occurs',
-    tools: ['Tally sheet', 'Counter app', 'Behavior log']
+    tools: ['Tally sheet', 'Counter app', 'Behavior log'],
+    example: 'Example: Count how many times a student raises their hand during class.'
   },
   {
     value: 'duration',
     label: 'Duration Recording',
     description: 'Measure how long the behavior lasts',
-    tools: ['Timer', 'Duration log', 'Stopwatch app']
+    tools: ['Timer', 'Duration log', 'Stopwatch app'],
+    example: 'Example: Measure how long a student stays on task during a 30-minute activity.'
   },
   {
     value: 'interval',
     label: 'Interval Recording',
     description: 'Check if behavior occurs during set time intervals',
-    tools: ['Interval timer', 'Observation sheet', 'Time sampling form']
+    tools: ['Interval timer', 'Observation sheet', 'Time sampling form'],
+    example: 'Example: Check every 5 minutes if a student is engaged in the lesson.'
   },
   {
-    value: 'abc',
-    label: 'ABC Recording',
+    value: 'latency',
+    label: 'Latency Recording',
+    description: 'Measure how long it takes for a behavior to start after a prompt',
+    tools: ['Stopwatch', 'Latency log', 'Timer app'],
+    example: 'Example: Measure how long it takes for a student to start working after being given an instruction.'
+  },
+  {
+    value: 'timeSampling',
+    label: 'Time Sampling Recording',
+    description: 'Observe behavior at specific moments in time',
+    tools: ['Timer', 'Observation sheet', 'Time sampling form'],
+    example: 'Example: Observe a student’s behavior at the start of every 10-minute interval.'
+  },
+  {
+    value: 'permanentProduct',
+    label: 'Permanent Product',
+    description: 'Record tangible outcomes or products of behavior',
+    tools: ['Checklist', 'Product log', 'Digital tracking app'],
+    example: 'Example: Count the number of completed homework assignments or worksheets.'
+  },
+  {
+    value: 'abcAnalysis',
+    label: 'ABC Analysis',
     description: 'Document Antecedent, Behavior, Consequence',
-    tools: ['ABC chart', 'Behavior incident form', 'Digital tracking app']
+    tools: ['ABC chart', 'Behavior incident form', 'Digital tracking app'],
+    example: 'Example: Record what happens before, during, and after a student has a tantrum.'
+  },
+  {
+    value: 'scatterplot',
+    label: 'Scatterplot',
+    description: 'Identify patterns of behavior over time',
+    tools: ['Scatterplot chart', 'Observation sheet', 'Digital tracking app'],
+    example: 'Example: Track when a student’s disruptive behavior occurs throughout the day.'
   }
 ];
 
@@ -104,8 +136,7 @@ export function DataCollection({ behaviors, onSubmit, onBack, initialData = {} }
             <h3 className="text-lg font-medium text-gray-800 mb-4">{behavior.name}</h3>
             <p className="text-gray-600 mb-4">{behavior.description}</p>
             
-            <div className="space-y-4">
-              <div>
+                          <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Collection Method
                   <span className="ml-1 inline-block" title="How will you collect data for this behavior?">
@@ -123,9 +154,10 @@ export function DataCollection({ behaviors, onSubmit, onBack, initialData = {} }
                   ))}
                 </select>
                 {collectionMethods[index].type && (
-                  <p className="mt-1 text-sm text-gray-500">
-                    {dataCollectionTypes.find(t => t.value === collectionMethods[index].type)?.description}
-                  </p>
+                  <div className="mt-1 text-sm text-gray-500">
+                    <p>{dataCollectionTypes.find(t => t.value === collectionMethods[index].type)?.description}</p>
+                    <p className="italic">{dataCollectionTypes.find(t => t.value === collectionMethods[index].type)?.example}</p>
+                  </div>
                 )}
               </div>
 
@@ -196,7 +228,6 @@ export function DataCollection({ behaviors, onSubmit, onBack, initialData = {} }
                 />
               </div>
             </div>
-          </div>
         ))}
 
         <div className="flex justify-between mt-6">
