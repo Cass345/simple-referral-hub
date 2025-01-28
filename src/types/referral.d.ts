@@ -21,16 +21,52 @@ export interface StudentBackground {
 }
 
 export interface ReferralReason {
-  reasons: string[];
+  reasons: {
+    academic: boolean;
+    behavior: boolean;
+    socialEmotional: boolean;
+  };
   concerns: string[];
   description: string;
 }
 
+export interface Behavior {
+  category: BehaviorCategory; 
+  name: string;
+  description: string;
+  evaluation?: BehaviorEvaluation;
+}
+export interface BehaviorEvaluation {
+  frequency: string;
+  duration: string;
+  intensity: string;
+  impact: string;
+  setting: string[];
+  triggers: string[];
+  consequences: string;
+}
+export interface DataCollectionMethod {
+  type: string;
+  method: string; // e.g., 'Observation', 'Survey', 'Checklist'
+  frequency: string; // e.g., 'Daily', 'Weekly'
+  tools: string[]; // e.g., ['ABC Chart', 'Frequency Count']
+  notes: string; // Additional notes
+}
 export interface ReferralFormData {
   teacherInfo: TeacherInfo;
   studentBackground: StudentBackground;
   referralReason: ReferralReason;
-  behaviors: any[];
-  goals: string[];
-  dataCollection: Record<string, any>;
+  behaviors: Behavior[];
+  dataCollection: DataCollectionMethod[]; 
 }
+
+export type BehaviorCategory = 
+  | 'social-emotional'
+  | 'attention-focus'
+  | 'communication-language'
+  | 'motor-skills'
+  | 'adaptive-behaviors'
+  | 'challenging-behaviors';
+
+
+

@@ -1,24 +1,8 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
+import type { Behavior } from '@/types/referral';
 
-interface Behavior {
-  category: string;
-  name: string;
-  description: string;
-  evaluation?: BehaviorEvaluation;
-}
-
-interface BehaviorEvaluation {
-  frequency: string;
-  duration: string;
-  intensity: string;
-  impact: string;
-  setting: string[];
-  triggers: string[];
-  consequences: string;
-}
-
-interface BehaviorEvaluationProps {
+export interface BehaviorEvaluationProps {
   behaviors: Behavior[];
   onSubmit: (data: Behavior[]) => void;
   onBack: () => void;
@@ -32,20 +16,37 @@ export function BehaviorEvaluation({ behaviors, onSubmit, onBack }: BehaviorEval
     onSubmit(evaluatedBehaviors);
   };
 
-  const updateBehaviorEvaluation = (index: number, field: keyof BehaviorEvaluation, value: string | string[]) => {
-    setEvaluatedBehaviors(prev => prev.map((behavior, i) => {
-      if (i === index) {
-        return {
-          ...behavior,
-          evaluation: {
-            ...behavior.evaluation,
-            [field]: value
-          }
-        };
-      }
-      return behavior;
-    }));
+  interface BehaviorEvaluationType {
+    frequency?: string;
+    duration?: string;
+    intensity?: string;
+    impact?: string;
+    setting?: string[];
+    triggers?: string[];
+    consequences?: string;
+  }
+
+  const updateBehaviorEvaluation = (
+    index: number,
+    field: keyof BehaviorEvaluationType,
+    value: string | string[]
+  ) => {
+    setEvaluatedBehaviors(prev =>
+      prev.map((behavior, i) => {
+        if (i === index) {
+          return {
+            ...behavior,
+            evaluation: {
+              ...behavior.evaluation,
+              [field]: value,
+            },
+          };
+        }
+        return behavior;
+      })
+    );
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
@@ -222,7 +223,8 @@ export function BehaviorEvaluation({ behaviors, onSubmit, onBack }: BehaviorEval
           </div>
         ))}
 
-        <div className="flex justify-between mt-6">
+
+<div className="flex justify-between mt-6">
           <button
             type="button"
             onClick={onBack}
@@ -236,7 +238,7 @@ export function BehaviorEvaluation({ behaviors, onSubmit, onBack }: BehaviorEval
             disabled={evaluatedBehaviors.some(b => !b.evaluation?.frequency)}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
           >
-            Next: Set Goals
+            Next: Data Collection
             <ChevronRight className="ml-2 h-5 w-5" />
           </button>
         </div>

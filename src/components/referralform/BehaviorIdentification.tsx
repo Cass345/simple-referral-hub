@@ -1,13 +1,7 @@
+// BehaviorIdentification.tsx
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
-
-type BehaviorCategory = 'social-emotional' | 'attention-focus' | 'communication-language' | 'motor-skills' | 'adaptive-behaviors' | 'challenging-behaviors';
-
-interface Behavior {
-  category: BehaviorCategory;
-  name: string;
-  description: string;
-}
+import type { Behavior, BehaviorCategory } from '@/types/referral'; // Import shared types
 
 interface BehaviorIdentificationProps {
   onSubmit: (data: Behavior[]) => void;

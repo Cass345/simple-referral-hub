@@ -6,14 +6,14 @@ import { StudentBackground } from "@/components/referralform/StudentBackground";
 import { ReferralReason } from "@/components/referralform/ReferralReason";
 import { BehaviorIdentification } from "@/components/referralform/BehaviorIdentification";
 import { BehaviorEvaluation } from "@/components/referralform/BehaviorEvaluation";
-import { GoalSetting } from "@/components/referralform/GoalSetting";
 import { DataCollection } from "@/components/referralform/DataCollection";
+import type { Behavior } from '@/types/referral';
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import type { ReferralFormData } from '@/types/referral';
 
-type Section = 'intro' | 'teacherInfo' | 'studentBackground' | 'referralReason' | 'behaviorId' | 'behaviorEval' | 'goals' | 'data' | 'review';
+type Section = 'intro' | 'teacherInfo' | 'studentBackground' | 'referralReason' | 'behaviorId' | 'behaviorEval' | 'data' | 'review';
 
 const StartReferral = () => {
   const [currentSection, setCurrentSection] = useState<Section>('intro');
@@ -39,13 +39,16 @@ const StartReferral = () => {
       strengths: []
     },
     referralReason: {
-      reasons: [],
+      reasons: {
+        academic: false,
+        behavior: false,
+        socialEmotional: false
+      },
       concerns: [],
       description: ''
     },
     behaviors: [],
-    goals: [],
-    dataCollection: {}
+    dataCollection: [],
   });
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -76,7 +79,6 @@ const StartReferral = () => {
           referral_reasons: formData.referralReason.reasons,
           concerns: formData.referralReason.concerns,
           strengths: formData.studentBackground.strengths,
-          goals: formData.goals,
           behavior_data: [],
           parent_notification_date: formData.studentBackground.parentNotificationDate,
           parent_name: formData.studentBackground.parentName,
@@ -95,7 +97,10 @@ const StartReferral = () => {
         .insert({
           student_id: student.id,
           referring_user_id: null, // TODO: Add user authentication
-          concern_type: formData.referralReason.reasons.join(', '),
+          concern_type: Object.entries(formData.referralReason.reasons)
+            .filter(([_, value]) => value)
+            .map(([key]) => key)
+            .join(', '),
           concern_description: formData.referralReason.description,
           status: 'pending'
         });
@@ -188,21 +193,9 @@ const StartReferral = () => {
             behaviors={formData.behaviors}
             onSubmit={(data) => {
               updateFormData('behaviors', data);
-              navigateToSection('goals');
-            }}
-            onBack={() => navigateToSection('behaviorId')}
-          />
-        )}
-
-        {currentSection === 'goals' && (
-          <GoalSetting
-            behaviors={formData.behaviors}
-            onSubmit={(data) => {
-              updateFormData('goals', data);
               navigateToSection('data');
             }}
-            onBack={() => navigateToSection('behaviorEval')}
-            initialData={formData.goals} // Use mock data for testing
+            onBack={() => navigateToSection('behaviorId')}
           />
         )}
 
@@ -213,7 +206,7 @@ const StartReferral = () => {
               updateFormData('dataCollection', data);
               navigateToSection('review');
             }}
-            onBack={() => navigateToSection('goals')}
+            onBack={() => navigateToSection('behaviorEval')}
             initialData={formData.dataCollection} // Use mock data for testing
           />
         )}
