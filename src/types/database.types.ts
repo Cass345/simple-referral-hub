@@ -15,16 +15,39 @@ export interface Database {
         Insert: Partial<StudentProfile>;
         Update: Partial<StudentProfile>;
       };
+      profiles: {
+        Row: {
+          id: string;
+          email: string;
+          role: string;
+          first_name?: string;
+          last_name?: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          role?: string;
+          first_name?: string;
+          last_name?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          role?: string;
+          first_name?: string;
+          last_name?: string;
+        };
+      };
     };
   };
 }
 
 export interface StudentProfile {
-  id: number;
+  id: string;
   student_id: string;
   first_name: string;
   last_name: string;
-  grade: number;
+  grade: string;
   date_of_birth: string;
   parent_name?: string;
   parent_email?: string;
@@ -54,4 +77,17 @@ export interface StudentProfile {
     specificConcerns: string[];
     previousStrategies: string[];
   };
+}
+
+export interface StudentBackgroundData {
+  previousInterventions: string[];
+  academicHistory: string;
+  behavioralHistory: string;
+  attendanceHistory: string;
+}
+
+export interface ReferralFormData {
+  primaryConcern: string;
+  specificConcerns: string[];
+  previousStrategies: string[];
 }

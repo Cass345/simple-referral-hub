@@ -33,13 +33,13 @@ const StartReferral = () => {
       {currentStep === 'profile' && (
         <StudentProfileSection 
           onComplete={handleProfileComplete}
-          studentId={studentProfile?.id}
+          studentId={studentProfile?.student_id}
         />
       )}
 
       {currentStep === 'baseline' && studentProfile && (
         <BaselineDataSection
-          studentId={studentProfile.id}
+          studentId={studentProfile.student_id}
           concerns={studentProfile.concerns || []}
           onComplete={handleBaselineComplete}
         />
@@ -47,7 +47,7 @@ const StartReferral = () => {
 
       {currentStep === 'interventions' && studentProfile && (
         <Tier1InterventionSection
-          studentId={studentProfile.id}
+          studentId={studentProfile.student_id}
           onComplete={handleReferralComplete}
         />
       )}
