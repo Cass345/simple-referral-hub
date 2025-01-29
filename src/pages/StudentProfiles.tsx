@@ -1,20 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { mockStudentProfile } from "@/mockData";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import type { StudentProfile, BehaviorData } from "@/types/database.types";
+import { StudentDashboard } from "@/components/student/StudentDashboard";
+import type { StudentProfile } from "@/types/database.types";
 
 const StudentProfiles = () => {
   const [students, setStudents] = useState<StudentProfile[]>([mockStudentProfile]);
@@ -42,24 +34,6 @@ const StudentProfiles = () => {
     }
   };
 
-  const renderProgressChart = (behaviorData: BehaviorData[] | null) => {
-    if (!behaviorData || behaviorData.length === 0) {
-      return <p className="text-gray-500">No behavior data available yet.</p>;
-    }
-
-    return (
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={behaviorData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="frequency" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  };
-
   return (
     <div className="animate-fade-in space-y-6">
       <h1 className="text-3xl font-bold mb-6">Student Profiles</h1>
@@ -83,12 +57,16 @@ const StudentProfiles = () => {
 
         {selectedStudent && (
           <Card className="md:col-span-2 p-6">
-            <Tabs defaultValue="info">
+            <Tabs defaultValue="dashboard">
               <TabsList>
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="info">Student Information</TabsTrigger>
                 <TabsTrigger value="goals">Focus Areas & Goals</TabsTrigger>
-                <TabsTrigger value="progress">Progress Monitoring</TabsTrigger>
               </TabsList>
+
+              <TabsContent value="dashboard">
+                <StudentDashboard student={selectedStudent} />
+              </TabsContent>
 
               <TabsContent value="info" className="space-y-4">
                 <h3 className="text-lg font-semibold">Personal Information</h3>
@@ -174,11 +152,6 @@ const StudentProfiles = () => {
                     )}
                   </TableBody>
                 </Table>
-              </TabsContent>
-
-              <TabsContent value="progress" className="space-y-4">
-                <h3 className="text-lg font-semibold">Progress Monitoring</h3>
-                {renderProgressChart(selectedStudent.behavior_data)}
               </TabsContent>
             </Tabs>
           </Card>
