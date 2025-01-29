@@ -1,7 +1,5 @@
-import { Behavior, BehaviorCategory, BehaviorData, TeacherInfo, StudentBackground, ReferralReason } from '@/types/referral';
-import { StudentProfile } from '@/types/database.types';
+import type { StudentProfile } from '@/types/database.types';
 
-// Example student profile data
 export const mockStudentProfile: StudentProfile = {
   id: "1",
   created_at: "2024-01-29T00:00:00Z",
@@ -12,17 +10,25 @@ export const mockStudentProfile: StudentProfile = {
   student_id: "STU2024001",
   user_id: "user123",
   referring_teacher: "Sarah Johnson",
-  referral_reasons: ["academic", "behavior_attendance"],
+  referral_reasons: ["Academic Support", "Behavior Management"],
   concerns: ["Reading comprehension", "Task completion"],
   strengths: ["Creative thinking", "Verbal communication"],
   behavior_data: [
     {
       date: "2024-01-15",
-      frequency: 5
+      frequency: 5,
+      duration: "15 minutes",
+      intensity: "moderate",
+      setting: ["classroom", "playground"],
+      notes: "Difficulty staying on task"
     },
     {
       date: "2024-01-22",
-      frequency: 3
+      frequency: 3,
+      duration: "10 minutes",
+      intensity: "mild",
+      setting: ["classroom"],
+      notes: "Showing improvement"
     }
   ],
   parent_notification_date: "2024-01-10",
@@ -30,6 +36,11 @@ export const mockStudentProfile: StudentProfile = {
   parent_email: "robert.johnson@email.com",
   parent_phone: "555-0123",
   language: "English",
+  goals: [
+    "Improve reading comprehension",
+    "Complete tasks within given timeframe",
+    "Follow classroom routines"
+  ],
   teacherInfo: {
     teacherName: "Sarah Johnson",
     grade: 4,

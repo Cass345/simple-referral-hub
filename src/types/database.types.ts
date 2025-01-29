@@ -137,13 +137,23 @@ export interface StudentProfile {
   referral_reasons: string[] | null;
   concerns: string[] | null;
   strengths: string[] | null;
-  behavior_data: Json[] | null;
+  behavior_data: BehaviorData[] | null;
   parent_notification_date: string | null;
   parent_name: string | null;
   parent_email: string | null;
   parent_phone: string | null;
   language: string | null;
+  goals?: string[];
   teacherInfo?: any;
   studentBackground?: any;
   referralReason?: any;
+}
+
+export interface BehaviorData {
+  date: string;
+  frequency: number;
+  duration?: string;
+  intensity?: string;
+  setting?: string[];
+  notes?: string;
 }

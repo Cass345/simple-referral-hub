@@ -14,15 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { StudentProfile } from "@/types/database.types";
-
-interface BehaviorData {
-  date: string;
-  frequency: number;
-}
+import type { StudentProfile, BehaviorData } from "@/types/database.types";
 
 const StudentProfiles = () => {
-  const [students, setStudents] = useState<StudentProfile[]>([mockStudentProfile]); // Initialize with mock data
+  const [students, setStudents] = useState<StudentProfile[]>([mockStudentProfile]);
   const [selectedStudent, setSelectedStudent] = useState<StudentProfile | null>(null);
   const { toast } = useToast();
 
@@ -37,7 +32,6 @@ const StudentProfiles = () => {
         .select('*');
 
       if (error) throw error;
-      // Combine mock data with real data from Supabase
       setStudents([mockStudentProfile, ...(data || [])]);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -48,7 +42,11 @@ const StudentProfiles = () => {
     }
   };
 
-  const renderProgressChart = (behaviorData: BehaviorData[]) => {
+  const renderProgressChart = (behaviorData: BehaviorData[] | null) => {
+    if (!behaviorData || behaviorData.length === 0) {
+      return <p className="text-gray-500">No behavior data available yet.</p>;
+    }
+
     return (
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={behaviorData}>
@@ -117,19 +115,19 @@ const StudentProfiles = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-500">Parent/Guardian</p>
-                    <p>{selectedStudent.parent_name}</p>
+                    <p>{selectedStudent.parent_name || 'Not provided'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Phone</p>
-                    <p>{selectedStudent.parent_phone}</p>
+                    <p>{selectedStudent.parent_phone || 'Not provided'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Email</p>
-                    <p>{selectedStudent.parent_email}</p>
+                    <p>{selectedStudent.parent_email || 'Not provided'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Primary Language</p>
-                    <p>{selectedStudent.language}</p>
+                    <p>{selectedStudent.language || 'Not provided'}</p>
                   </div>
                 </div>
               </TabsContent>
@@ -139,14 +137,14 @@ const StudentProfiles = () => {
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-gray-500">Referring Teacher</p>
-                    <p>{selectedStudent.referring_teacher}</p>
+                    <p>{selectedStudent.referring_teacher || 'Not provided'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Referral Reasons</p>
                     <ul className="list-disc list-inside">
-                      {selectedStudent.referral_reasons.map((reason, index) => (
+                      {selectedStudent.referral_reasons?.map((reason, index) => (
                         <li key={index}>{reason}</li>
-                      ))}
+                      )) || <p>No referral reasons provided</p>}
                     </ul>
                   </div>
                 </div>
@@ -162,25 +160,25 @@ const StudentProfiles = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {selectedStudent.goals.map((goal, index) => (
+                    {selectedStudent.goals?.map((goal, index) => (
                       <TableRow key={index}>
                         <TableCell>{goal}</TableCell>
                         <TableCell>Pending</TableCell>
                         <TableCell>Pending</TableCell>
                         <TableCell>In Progress</TableCell>
                       </TableRow>
-                    ))}
+                    )) || (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center">No goals set yet</TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TabsContent>
 
               <TabsContent value="progress" className="space-y-4">
                 <h3 className="text-lg font-semibold">Progress Monitoring</h3>
-                {selectedStudent.behavior_data ? (
-                  renderProgressChart(selectedStudent.behavior_data)
-                ) : (
-                  <p className="text-gray-500">No behavior data available yet.</p>
-                )}
+                {renderProgressChart(selectedStudent.behavior_data)}
               </TabsContent>
             </Tabs>
           </Card>
