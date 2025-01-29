@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { mockStudentProfile } from "@/mockData";
 import { StudentDashboard } from "@/components/student/StudentDashboard";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { StudentProfile } from "@/types/database.types";
 
 const StudentProfiles = () => {

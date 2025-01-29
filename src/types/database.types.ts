@@ -1,7 +1,22 @@
 export interface BehaviorData {
   date: string;
   frequency: number;
+  duration?: string;
+  intensity?: string;
+  setting?: string[];
   notes?: string;
+}
+
+export interface Database {
+  public: {
+    Tables: {
+      students: {
+        Row: StudentProfile;
+        Insert: Partial<StudentProfile>;
+        Update: Partial<StudentProfile>;
+      };
+    };
+  };
 }
 
 export interface StudentProfile {
@@ -17,8 +32,26 @@ export interface StudentProfile {
   language?: string;
   referring_teacher?: string;
   referral_reasons?: string[];
+  concerns?: string[];
   interventions?: any[];
   behavior_data?: BehaviorData[];
-  mtss_tier: number;
+  mtss_tier?: number;
   goals?: string[];
+  teacherInfo?: {
+    teacherName: string;
+    grade: number;
+    subject: string;
+    email: string;
+  };
+  studentBackground?: {
+    previousInterventions: string[];
+    academicHistory: string;
+    behavioralHistory: string;
+    attendanceHistory: string;
+  };
+  referralReason?: {
+    primaryConcern: string;
+    specificConcerns: string[];
+    previousStrategies: string[];
+  };
 }
