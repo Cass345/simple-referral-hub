@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Save, Printer } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { InterventionFocusHelper } from './InterventionFocusHelper';
 
 interface ChecklistItem {

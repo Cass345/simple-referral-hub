@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
-import { quizQuestions } from '../data/mtssData';
+import { quizQuestions } from '../../data/mtssData';
 
 export default function Guidebook() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
