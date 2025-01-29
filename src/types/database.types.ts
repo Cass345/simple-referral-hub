@@ -123,3 +123,27 @@ export interface Database {
 }
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+
+export interface StudentProfile {
+  id: string;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  grade: number;
+  date_of_birth: string;
+  student_id: string;
+  user_id: string;
+  referring_teacher: string | null;
+  referral_reasons: string[] | null;
+  concerns: string[] | null;
+  strengths: string[] | null;
+  behavior_data: Json[] | null;
+  parent_notification_date: string | null;
+  parent_name: string | null;
+  parent_email: string | null;
+  parent_phone: string | null;
+  language: string | null;
+  teacherInfo?: any;
+  studentBackground?: any;
+  referralReason?: any;
+}

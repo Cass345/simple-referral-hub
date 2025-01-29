@@ -71,3 +71,24 @@ export interface Behavior {
   description: string;
   evaluation?: BehaviorEvaluation;
 }
+
+export interface BehaviorData {
+  date: string;
+  frequency: number;
+  duration?: string;
+  intensity?: string;
+  setting?: string[];
+  notes?: string;
+}
+
+export interface StudentProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  grade: number;
+  dob: string;
+  studentId: string;
+  concerns: string[];
+  strengths: string[];
+  behaviorData: BehaviorData[];
+}
