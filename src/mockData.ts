@@ -1,4 +1,4 @@
-import { Behavior, BehaviorCategory } from '@/types/referral';
+import { Behavior, BehaviorCategory, BehaviorData, TeacherInfo, StudentBackground, ReferralReason } from '@/types/referral';
 
 export const mockTeacherInfo = {
   teacherName: 'Sarah Johnson',
