@@ -5,6 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { mockStudentProfile } from "@/mockData";
 import {
   Table,
   TableBody,
@@ -13,34 +14,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { StudentProfile } from "@/types/database.types";
 
 interface BehaviorData {
   date: string;
   frequency: number;
 }
 
-interface StudentProfile {
-  id: string;
-  first_name: string;
-  last_name: string;
-  grade: number;
-  date_of_birth: string;
-  student_id: string;
-  referring_teacher: string;
-  referral_reasons: string[];
-  concerns: string[];
-  strengths: string[];
-  goals: string[];
-  behavior_data: BehaviorData[];
-  parent_notification_date: string;
-  parent_name: string;
-  parent_email: string;
-  parent_phone: string;
-  language: string;
-}
-
 const StudentProfiles = () => {
-  const [students, setStudents] = useState<StudentProfile[]>([]);
+  const [students, setStudents] = useState<StudentProfile[]>([mockStudentProfile]); // Initialize with mock data
   const [selectedStudent, setSelectedStudent] = useState<StudentProfile | null>(null);
   const { toast } = useToast();
 
@@ -55,7 +37,8 @@ const StudentProfiles = () => {
         .select('*');
 
       if (error) throw error;
-      setStudents(data || []);
+      // Combine mock data with real data from Supabase
+      setStudents([mockStudentProfile, ...(data || [])]);
     } catch (error) {
       console.error('Error fetching students:', error);
       toast({
