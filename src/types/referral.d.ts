@@ -7,27 +7,16 @@ export interface TeacherInfo {
 }
 
 export interface StudentBackground {
-  firstName: string;
-  lastName: string;
-  grade: number;
-  dob: string;
-  studentId: string;
-  primaryLanguage: string;
-  parentName: string;
-  parentEmail: string;
-  parentPhone: string;
-  parentNotificationDate: string;
-  strengths: string[];
+  previousInterventions: string[];
+  academicHistory: string;
+  behavioralHistory: string;
+  attendanceHistory: string;
 }
 
 export interface ReferralReason {
-  reasons: {
-    academic: boolean;
-    behavior: boolean;
-    socialEmotional: boolean;
-  };
-  concerns: string[];
-  description: string;
+  primaryConcern: string;
+  specificConcerns: string[];
+  previousStrategies: string[];
 }
 
 export interface BehaviorEvaluation {
