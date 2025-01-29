@@ -26,71 +26,57 @@ export function StudentBackground({ onSubmit, onBack, initialData }: StudentBack
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Student Background</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
-            Date of Birth
+          <label htmlFor="academicHistory" className="block text-sm font-medium text-gray-700 mb-1">
+            Academic History
           </label>
-          <input
-            type="date"
-            id="dob"
-            value={formData.dob}
-            onChange={(e) => setFormData(prev => ({ ...prev, dob: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
+          <textarea
+            id="academicHistory"
+            value={formData.academicHistory}
+            onChange={(e) => setFormData(prev => ({ ...prev, academicHistory: e.target.value }))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            rows={3}
           />
         </div>
 
         <div>
-          <label htmlFor="primaryLanguage" className="block text-sm font-medium text-gray-700 mb-1">
-            Primary Home Language
+          <label htmlFor="behavioralHistory" className="block text-sm font-medium text-gray-700 mb-1">
+            Behavioral History
           </label>
-          <input
-            type="text"
-            id="primaryLanguage"
-            value={formData.primaryLanguage}
-            onChange={(e) => setFormData(prev => ({ ...prev, primaryLanguage: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
+          <textarea
+            id="behavioralHistory"
+            value={formData.behavioralHistory}
+            onChange={(e) => setFormData(prev => ({ ...prev, behavioralHistory: e.target.value }))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            rows={3}
           />
         </div>
 
         <div>
-          <label htmlFor="parentName" className="block text-sm font-medium text-gray-700 mb-1">
-            Parent/Guardian Name
+          <label htmlFor="attendanceHistory" className="block text-sm font-medium text-gray-700 mb-1">
+            Attendance History
           </label>
-          <input
-            type="text"
-            id="parentName"
-            value={formData.parentName}
-            onChange={(e) => setFormData(prev => ({ ...prev, parentName: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
+          <textarea
+            id="attendanceHistory"
+            value={formData.attendanceHistory}
+            onChange={(e) => setFormData(prev => ({ ...prev, attendanceHistory: e.target.value }))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            rows={3}
           />
         </div>
 
         <div>
-          <label htmlFor="parentContact" className="block text-sm font-medium text-gray-700 mb-1">
-            Parent Contact
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Previous Interventions
           </label>
-          <input
-            type="text"
-            id="parentContact"
-            value={formData.parentContact}
-            onChange={(e) => setFormData(prev => ({ ...prev, parentContact: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="parentNotificationDate" className="block text-sm font-medium text-gray-700 mb-1">
-            Parent Notification Date (For Tier 2 or 3)
-          </label>
-          <input
-            type="date"
-            id="parentNotificationDate"
-            value={formData.parentNotificationDate}
-            onChange={(e) => setFormData(prev => ({ ...prev, parentNotificationDate: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          <textarea
+            value={formData.previousInterventions.join('\n')}
+            onChange={(e) => setFormData(prev => ({ 
+              ...prev, 
+              previousInterventions: e.target.value.split('\n').filter(Boolean)
+            }))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            rows={3}
+            placeholder="Enter each intervention on a new line"
           />
         </div>
 
@@ -107,7 +93,7 @@ export function StudentBackground({ onSubmit, onBack, initialData }: StudentBack
             type="submit"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
           >
-            Next: Referral Reason
+            Next
             <ChevronRight className="ml-2 h-5 w-5" />
           </button>
         </div>
