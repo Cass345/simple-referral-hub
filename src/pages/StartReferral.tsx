@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { TeacherInfo } from "@/components/referralform/TeacherInfo";
 import { StudentBackground } from "@/components/referralform/StudentBackground";
@@ -7,11 +7,20 @@ import { ReferralReason } from "@/components/referralform/ReferralReason";
 import { BehaviorIdentification } from "@/components/referralform/BehaviorIdentification";
 import { BehaviorEvaluation } from "@/components/referralform/BehaviorEvaluation";
 import { DataCollection } from "@/components/referralform/DataCollection";
+import { ReviewSummary } from "@/components/referralform/ReviewSummary"; // Import the missing component
 import type { Behavior } from '@/types/referral';
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import type { ReferralFormData } from '@/types/referral';
+import {
+  mockTeacherInfo,
+  mockStudentBackground,
+  mockReferralReason,
+  mockBehaviorIdentification,
+  mockBehaviorEvaluation
+} from '@/mockData';
+import { mockDataCollection } from '@/mockData';
 
 type Section = 'intro' | 'teacherInfo' | 'studentBackground' | 'referralReason' | 'behaviorId' | 'behaviorEval' | 'data' | 'review';
 
@@ -47,7 +56,7 @@ const StartReferral = () => {
       concerns: [],
       description: ''
     },
-    behaviors: [],
+    behaviors: [] as Behavior[],
     dataCollection: [],
   });
   const { toast } = useToast();
@@ -151,8 +160,8 @@ const StartReferral = () => {
               updateFormData('teacherInfo', data);
               navigateToSection('studentBackground');
             }}
-            initialData={formData.teacherInfo}
-          />
+            initialData={mockTeacherInfo} // Use mock data here
+            />
         )}
 
         {currentSection === 'studentBackground' && (
@@ -162,7 +171,7 @@ const StartReferral = () => {
               navigateToSection('referralReason');
             }}
             onBack={() => navigateToSection('teacherInfo')}
-            initialData={formData.studentBackground}
+            initialData={mockStudentBackground} // Use mock data here
           />
         )}
 
@@ -173,19 +182,19 @@ const StartReferral = () => {
               navigateToSection('behaviorId');
             }}
             onBack={() => navigateToSection('studentBackground')}
-            initialData={formData.referralReason}
+            initialData={mockReferralReason} // Use mock data here
           />
         )}
 
         {currentSection === 'behaviorId' && (
-          <BehaviorIdentification
-            onSubmit={(data) => {
-              updateFormData('behaviors', data);
-              navigateToSection('behaviorEval');
-            }}
-            onBack={() => navigateToSection('referralReason')}
-            initialData={formData.behaviors}
-          />
+        <BehaviorIdentification
+        onSubmit={(data) => {
+          updateFormData('behaviors', data);
+          navigateToSection('behaviorEval');
+        }}
+        onBack={() => navigateToSection('referralReason')}
+        initialData={mockBehaviorIdentification} // Ensure this matches the expected type
+      />
         )}
 
         {currentSection === 'behaviorEval' && (
@@ -196,6 +205,7 @@ const StartReferral = () => {
               navigateToSection('data');
             }}
             onBack={() => navigateToSection('behaviorId')}
+            initialData={mockBehaviorEvaluation} // Use mock data here
           />
         )}
 
@@ -207,32 +217,16 @@ const StartReferral = () => {
               navigateToSection('review');
             }}
             onBack={() => navigateToSection('behaviorEval')}
-            initialData={formData.dataCollection} // Use mock data for testing
+            initialData={mockDataCollection} // Use mock data here
           />
         )}
 
         {currentSection === 'review' && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Review and Submit</h2>
-            <div className="space-y-6">
-              {/* Add review summary here */}
-            </div>
-            <div className="flex justify-between mt-6">
-              <button
-                onClick={() => navigateToSection('data')}
-                className="flex items-center text-gray-600 hover:text-gray-800"
-              >
-                <ChevronLeft className="mr-2 h-5 w-5" />
-                Back
-              </button>
-              <button
-                onClick={handleSubmitReferral}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Submit Referral
-              </button>
-            </div>
-          </div>
+          <ReviewSummary
+            formData={formData}
+            onSubmit={handleSubmitReferral}
+            onBack={() => navigateToSection('data')}
+          />
         )}
       </Card>
     </div>

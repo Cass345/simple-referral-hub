@@ -30,12 +30,6 @@ export interface ReferralReason {
   description: string;
 }
 
-export interface Behavior {
-  category: BehaviorCategory; 
-  name: string;
-  description: string;
-  evaluation?: BehaviorEvaluation;
-}
 export interface BehaviorEvaluation {
   frequency: string;
   duration: string;
@@ -60,7 +54,7 @@ export interface ReferralFormData {
   dataCollection: DataCollectionMethod[]; 
 }
 
-export type BehaviorCategory = 
+  export type BehaviorCategory =
   | 'social-emotional'
   | 'attention-focus'
   | 'communication-language'
@@ -68,5 +62,14 @@ export type BehaviorCategory =
   | 'adaptive-behaviors'
   | 'challenging-behaviors';
 
-
+export interface Behavior {
+  id?: number;
+  name?: string;
+  category: BehaviorCategory; // Required property
+  description?: string;
+  frequency?: string;
+  duration?: string;
+  intensity?: string;
+  impact?: string;
+}
 

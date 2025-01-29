@@ -1,3 +1,6 @@
+// Import the BehaviorCategory type from your shared types
+import { Behavior, BehaviorCategory } from '@/types/referral';
+
 // Mock teacher info
 export const mockTeacherInfo = {
   teacherName: 'Sarah Johnson',
@@ -30,72 +33,60 @@ export const mockReferralReason = {
   ]
 };
 
-// Mock behaviors
-export const mockBehaviors = [
+// Mock Behavior Identification Data
+export const mockBehaviorIdentification: Behavior [] = [
   {
     id: 1,
     name: 'Difficulty Staying on Task',
     category: 'attention-focus',
     description: 'Student frequently switches between activities without completion and has trouble maintaining focus during independent work.',
-    evaluation: {
-      frequency: 'daily',
-      duration: '5-10-mins',
-      intensity: 'moderate',
-      impact: 'significant'
-    }
   },
   {
     id: 2,
     name: 'Disruptive Classroom Behavior',
     category: 'challenging-behaviors',
     description: 'Student calls out answers without raising hand and leaves seat without permission during instruction time.',
-    evaluation: {
-      frequency: 'frequently',
-      duration: 'less-5-mins',
-      intensity: 'moderate',
-      impact: 'moderate'
-    }
-  }
+  },
 ];
 
-// Mock goals
-export const mockGoals = [
+// Mock Behavior Evaluation Data
+export const mockBehaviorEvaluation: Behavior[] = [
   {
-    behaviorId: 0,
-    specific: 'Increase time spent on assigned tasks during independent work periods',
-    measurable: 'Track duration of focused work time using a timer',
-    achievable: '1. Use visual timer\n2. Break tasks into smaller chunks\n3. Provide frequent breaks',
-    relevant: 'Improving task focus will increase academic performance and reduce classroom disruptions',
-    timely: 'Within the next 6 weeks',
-    baseline: '5 minutes of continuous focus',
-    target: '15 minutes of continuous focus',
-    timeline: '6 weeks with weekly progress monitoring'
+    category: 'attention-focus',
+    frequency: 'daily',
+    duration: '5-10-mins',
+    intensity: 'moderate',
+    impact: 'significant',
   },
   {
-    behaviorId: 1,
-    specific: 'Reduce instances of calling out and leaving seat without permission',
-    measurable: 'Count frequency of calling out and unauthorized seat leaving',
-    achievable: '1. Use silent hand signals\n2. Implement token system\n3. Regular movement breaks',
-    relevant: 'Reducing disruptions will improve learning environment for all students',
-    timely: 'Within the next 4 weeks',
-    baseline: '8-10 disruptions per hour',
-    target: '2-3 disruptions per hour',
-    timeline: '4 weeks with daily tracking'
-  }
+    category: 'challenging-behaviors',
+    frequency: 'frequently',
+    duration: 'less-5-mins',
+    intensity: 'moderate',
+    impact: 'moderate',
+  },
 ];
 
 // Mock data collection methods
 export const mockDataCollection = {
+
   0: {
-    type: 'duration',
-    frequency: 'daily',
-    tools: ['Timer', 'Duration log'],
-    notes: 'Use visual timer visible to student. Record duration of focused work periods in 5-minute increments.'
+
+    type: 'Behavior',
+    method: 'Observation',
+    frequency: 'Daily',
+    tools: ['ABC Chart'],
+    notes: 'Monitor during morning activities'
+
   },
+
   1: {
-    type: 'frequency',
-    frequency: 'continuous',
-    tools: ['Tally sheet', 'Counter app'],
-    notes: 'Track each instance of calling out and leaving seat separately. Note time of day and activity context.'
+
+    type: 'Academic',
+    method: 'Survey',
+    frequency: 'Weekly',
+    tools: ['Progress Monitoring Sheet'],
+    notes: 'Track reading comprehension'
+
   }
 };

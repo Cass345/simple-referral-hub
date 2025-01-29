@@ -1,4 +1,3 @@
-// BehaviorIdentification.tsx
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 import type { Behavior, BehaviorCategory } from '@/types/referral'; // Import shared types
@@ -208,3 +207,10 @@ export function BehaviorIdentification({ onSubmit, onBack, initialData = [] }: B
     </div>
   );
 }
+
+
+
+
+
+
+

@@ -1,9 +1,17 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 
+interface TeacherFormData {
+  teacherName: string;
+  classroomNumber: string;
+  studentName: string;
+  studentAge: string;
+  studentSchedule: string;
+}
+
 interface TeacherInfoProps {
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (data: TeacherFormData) => void;
+  initialData?: Partial<TeacherFormData>;
 }
 
 export function TeacherInfo({ onSubmit, initialData = {} }: TeacherInfoProps) {

@@ -14,6 +14,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+interface BehaviorData {
+  date: string;
+  frequency: number;
+}
+
 interface StudentProfile {
   id: string;
   first_name: string;
@@ -26,7 +31,7 @@ interface StudentProfile {
   concerns: string[];
   strengths: string[];
   goals: string[];
-  behavior_data: any;
+  behavior_data: BehaviorData[];
   parent_notification_date: string;
   parent_name: string;
   parent_email: string;
@@ -55,13 +60,12 @@ const StudentProfiles = () => {
       console.error('Error fetching students:', error);
       toast({
         title: "Error",
-        description: "Failed to load student profiles",
-        variant: "destructive",
+        description: "Failed to load student profiles"
       });
     }
   };
 
-  const renderProgressChart = (behaviorData: any[]) => {
+  const renderProgressChart = (behaviorData: BehaviorData[]) => {
     return (
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={behaviorData}>

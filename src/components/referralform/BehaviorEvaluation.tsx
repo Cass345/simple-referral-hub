@@ -6,6 +6,7 @@ export interface BehaviorEvaluationProps {
   behaviors: Behavior[];
   onSubmit: (data: Behavior[]) => void;
   onBack: () => void;
+  initialData?: Behavior[];
 }
 
 export function BehaviorEvaluation({ behaviors, onSubmit, onBack }: BehaviorEvaluationProps) {
