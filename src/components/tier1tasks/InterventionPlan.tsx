@@ -36,7 +36,7 @@ export default function InterventionPlan() {
 
         {showDropdown && (
           <div className="absolute w-full mt-2 bg-white rounded-lg shadow-lg z-10">
-            {uniqueFocusAreas.map((area) => (
+            {uniqueFocusAreas.map((area: string) => (
               <div key={area}>
                 <div className="px-4 py-2 bg-gray-50 font-medium text-gray-700">
                   {area}

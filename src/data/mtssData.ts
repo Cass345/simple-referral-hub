@@ -1,4 +1,4 @@
-import { Intervention, ChecklistItem } from './types';
+import { Intervention, ChecklistItem, QuizQuestion } from './types';
 
 export const interventionStrategies: Intervention[] = [
   {
@@ -67,3 +67,6 @@ export const quizQuestions = [
     correctAnswer: 3
   }
 ];
+
+// Export interventions for backward compatibility
+export const interventions = interventionStrategies;
