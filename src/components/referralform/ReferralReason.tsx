@@ -1,40 +1,23 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-interface ReferralFormData {
-  reasons: {
-    academic: boolean;
-    behavior: boolean;
-    socialEmotional: boolean;
-  };
-  strengths: string[];
-}
+import type { ReferralFormData } from '@/types/database.types';
 
 interface ReferralReasonProps {
   onSubmit: (data: ReferralFormData) => void;
   onBack: () => void;
-  initialData?: Partial<ReferralFormData>;
+  initialData?: ReferralFormData;
 }
 
-export function ReferralReason({ onSubmit, onBack, initialData = {} }: ReferralReasonProps) {
-  const [formData, setFormData] = useState({
-    reasons: initialData.reasons || {
-      academic: false,
-      behavior: false,
-      socialEmotional: false
-    },
-    strengths: initialData.strengths || ['', '', '']
+export function ReferralReason({ onSubmit, onBack, initialData }: ReferralReasonProps) {
+  const [formData, setFormData] = useState<ReferralFormData>(initialData || {
+    primaryConcern: '',
+    specificConcerns: [],
+    previousStrategies: []
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-  };
-
-  const updateStrength = (index: number, value: string) => {
-    const newStrengths = [...formData.strengths];
-    newStrengths[index] = value;
-    setFormData(prev => ({ ...prev, strengths: newStrengths }));
   };
 
   return (

@@ -1,27 +1,19 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-interface StudentBackgroundData {
-  dob: string;
-  primaryLanguage: string;
-  parentName: string;
-  parentContact: string;
-  parentNotificationDate: string;
-}
+import type { StudentBackgroundData } from '@/types/database.types';
 
 interface StudentBackgroundProps {
   onSubmit: (data: StudentBackgroundData) => void;
   onBack: () => void;
-  initialData?: Partial<StudentBackgroundData>;
+  initialData?: StudentBackgroundData;
 }
 
-export function StudentBackground({ onSubmit, onBack, initialData = {} }: StudentBackgroundProps) {
-  const [formData, setFormData] = useState({
-    dob: initialData.dob || '',
-    primaryLanguage: initialData.primaryLanguage || '',
-    parentName: initialData.parentName || '',
-    parentContact: initialData.parentContact || '',
-    parentNotificationDate: initialData.parentNotificationDate || ''
+export function StudentBackground({ onSubmit, onBack, initialData }: StudentBackgroundProps) {
+  const [formData, setFormData] = useState<StudentBackgroundData>(initialData || {
+    previousInterventions: [],
+    academicHistory: '',
+    behavioralHistory: '',
+    attendanceHistory: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {

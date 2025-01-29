@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { TeacherInfo } from "./TeacherInfo";
 import { StudentBackground } from "./StudentBackground";
 import { ReferralReason } from "./ReferralReason";
-import type { StudentProfile } from "@/types/database.types";
-import type { StudentBackgroundData, ReferralFormData } from "@/types/database.types";
+import type { StudentProfile, StudentBackgroundData, ReferralFormData } from "@/types/database.types";
 
 interface StudentProfileSectionProps {
   onComplete: (profileData: StudentProfile) => void;
@@ -91,12 +90,12 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
           onSubmit={() => {}} 
         />
         <StudentBackground 
-          initialData={existingProfile?.studentBackground as StudentBackgroundData}
+          initialData={existingProfile?.studentBackground}
           onSubmit={() => {}}
           onBack={() => {}}
         />
         <ReferralReason 
-          initialData={existingProfile?.referralReason as ReferralFormData}
+          initialData={existingProfile?.referralReason}
           onSubmit={() => {}}
           onBack={() => {}}
         />
