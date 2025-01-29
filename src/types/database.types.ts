@@ -66,17 +66,8 @@ export interface StudentProfile {
     subject: string;
     email: string;
   };
-  studentBackground?: {
-    previousInterventions: string[];
-    academicHistory: string;
-    behavioralHistory: string;
-    attendanceHistory: string;
-  };
-  referralReason?: {
-    primaryConcern: string;
-    specificConcerns: string[];
-    previousStrategies: string[];
-  };
+  studentBackground?: StudentBackgroundData;
+  referralReason?: ReferralFormData;
 }
 
 export interface StudentBackgroundData {
