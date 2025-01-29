@@ -31,13 +31,13 @@ export interface ReferralReason {
 }
 
 export interface BehaviorEvaluation {
-  frequency?: string;
-  duration?: string;
-  intensity?: string;
-  impact?: string;
-  setting?: string[];
-  triggers?: string[];
-  consequences?: string;
+  frequency: string;
+  duration: string;
+  intensity: string;
+  impact: string;
+  setting: string[];
+  triggers: string[];
+  consequences: string;
 }
 
 export interface DataCollectionMethod {
@@ -66,8 +66,8 @@ export type BehaviorCategory =
 
 export interface Behavior {
   id?: number;
-  name?: string;
+  name: string;
   category: BehaviorCategory;
-  description?: string;
+  description: string;
   evaluation?: BehaviorEvaluation;
 }
