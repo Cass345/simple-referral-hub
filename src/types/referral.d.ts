@@ -31,30 +31,32 @@ export interface ReferralReason {
 }
 
 export interface BehaviorEvaluation {
-  frequency: string;
-  duration: string;
-  intensity: string;
-  impact: string;
-  setting: string[];
-  triggers: string[];
-  consequences: string;
+  frequency?: string;
+  duration?: string;
+  intensity?: string;
+  impact?: string;
+  setting?: string[];
+  triggers?: string[];
+  consequences?: string;
 }
+
 export interface DataCollectionMethod {
   type: string;
-  method: string; // e.g., 'Observation', 'Survey', 'Checklist'
-  frequency: string; // e.g., 'Daily', 'Weekly'
-  tools: string[]; // e.g., ['ABC Chart', 'Frequency Count']
-  notes: string; // Additional notes
+  method: string;
+  frequency: string;
+  tools: string[];
+  notes: string;
 }
+
 export interface ReferralFormData {
   teacherInfo: TeacherInfo;
   studentBackground: StudentBackground;
   referralReason: ReferralReason;
   behaviors: Behavior[];
-  dataCollection: DataCollectionMethod[]; 
+  dataCollection: DataCollectionMethod[];
 }
 
-  export type BehaviorCategory =
+export type BehaviorCategory =
   | 'social-emotional'
   | 'attention-focus'
   | 'communication-language'
@@ -65,11 +67,7 @@ export interface ReferralFormData {
 export interface Behavior {
   id?: number;
   name?: string;
-  category: BehaviorCategory; // Required property
+  category: BehaviorCategory;
   description?: string;
-  frequency?: string;
-  duration?: string;
-  intensity?: string;
-  impact?: string;
+  evaluation?: BehaviorEvaluation;
 }
-

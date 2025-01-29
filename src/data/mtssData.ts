@@ -39,3 +39,16 @@ export const tierOneChecklist = [
     ]
   }
 ];
+
+export interface Intervention {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+}
+
+export interface ChecklistItem {
+  id: number;
+  category: string;
+  items: string[];
+}
