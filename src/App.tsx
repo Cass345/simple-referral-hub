@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MainSidebar } from "@/components/layout/Sidebar";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { AuthProvider } from "@/lib/auth";
+import { AuthProvider } from "@/lib/AuthProvider";
 
 // Pages
 import Index from "./pages/Index";
