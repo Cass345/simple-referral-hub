@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/lib/AuthProvider";
+import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
