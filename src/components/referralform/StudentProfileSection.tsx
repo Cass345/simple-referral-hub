@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 import { TeacherInfo } from "./TeacherInfo";
 import { StudentBackground } from "./StudentBackground";
 import { ReferralReason } from "./ReferralReason";
-import type { StudentProfile, StudentBackgroundData, ReferralFormData } from "@/types/database.types";
+import type { StudentProfile } from "@/types/database.types";
 
 interface StudentProfileSectionProps {
   onComplete: (profileData: StudentProfile) => void;
@@ -50,13 +49,17 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
     }
   };
 
-  const handleTeacherInfoSubmit = async (teacherInfo: any) => {
+  const handleTeacherInfoSubmit = async (teacherInfo: Partial<StudentProfile>) => {
     try {
       const { data, error } = await supabase
         .from('students')
         .upsert({
-          ...teacherInfo,
-          student_id: studentId || Math.random().toString(36).substring(7),
+          first_name: teacherInfo.first_name,
+          last_name: teacherInfo.last_name,
+          grade: teacherInfo.grade,
+          date_of_birth: teacherInfo.date_of_birth,
+          student_id: teacherInfo.student_id || Math.random().toString(36).substring(7),
+          referring_teacher: teacherInfo.referring_teacher,
           updated_at: new Date().toISOString(),
         })
         .select()
@@ -66,27 +69,27 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
       
       toast({
         title: "Success",
-        description: "Teacher information saved successfully",
+        description: "Student information saved successfully",
       });
       
       if (data) {
         setExistingProfile(data);
       }
     } catch (error) {
-      console.error('Error saving teacher info:', error);
+      console.error('Error saving student info:', error);
       toast({
         title: "Error",
-        description: "Failed to save teacher information",
+        description: "Failed to save student information",
         variant: "destructive",
       });
     }
   };
 
-  const handleStudentBackgroundSubmit = async (backgroundData: StudentBackgroundData) => {
+  const handleStudentBackgroundSubmit = async (backgroundData: StudentProfile['studentBackground']) => {
     if (!existingProfile?.id) {
       toast({
         title: "Error",
-        description: "Please complete teacher information first",
+        description: "Please complete student information first",
         variant: "destructive",
       });
       return;
@@ -96,7 +99,7 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
       const { data, error } = await supabase
         .from('students')
         .update({
-          ...backgroundData,
+          studentBackground: backgroundData,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existingProfile.id)
@@ -123,7 +126,7 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
     }
   };
 
-  const handleReferralReasonSubmit = async (referralData: ReferralFormData) => {
+  const handleReferralReasonSubmit = async (referralData: StudentProfile['referralReason']) => {
     if (!existingProfile?.id) {
       toast({
         title: "Error",
@@ -137,7 +140,7 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
       const { data, error } = await supabase
         .from('students')
         .update({
-          ...referralData,
+          referralReason: referralData,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existingProfile.id)
@@ -173,7 +176,7 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
       <h2 className="text-2xl font-semibold mb-6">Student Information & Profile</h2>
       <div className="space-y-6">
         <TeacherInfo 
-          initialData={existingProfile?.teacherInfo} 
+          initialData={existingProfile} 
           onSubmit={handleTeacherInfoSubmit} 
         />
         {existingProfile && (

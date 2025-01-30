@@ -1,26 +1,20 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-
-interface TeacherFormData {
-  teacherName: string;
-  classroomNumber: string;
-  studentName: string;
-  studentAge: string;
-  studentSchedule: string;
-}
+import type { StudentProfile } from '@/types/database.types';
 
 interface TeacherInfoProps {
-  onSubmit: (data: TeacherFormData) => void;
-  initialData?: Partial<TeacherFormData>;
+  onSubmit: (data: Partial<StudentProfile>) => void;
+  initialData?: Partial<StudentProfile>;
 }
 
 export function TeacherInfo({ onSubmit, initialData = {} }: TeacherInfoProps) {
   const [formData, setFormData] = useState({
-    teacherName: initialData.teacherName || '',
-    classroomNumber: initialData.classroomNumber || '',
-    studentName: initialData.studentName || '',
-    studentAge: initialData.studentAge || '',
-    studentSchedule: initialData.studentSchedule || ''
+    first_name: initialData.first_name || '',
+    last_name: initialData.last_name || '',
+    grade: initialData.grade || '',
+    date_of_birth: initialData.date_of_birth || '',
+    student_id: initialData.student_id || '',
+    referring_teacher: initialData.referring_teacher || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,79 +24,96 @@ export function TeacherInfo({ onSubmit, initialData = {} }: TeacherInfoProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Teacher Information</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Student Information</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="teacherName" className="block text-sm font-medium text-gray-700 mb-1">
-            Teacher Name
-          </label>
-          <input
-            type="text"
-            id="teacherName"
-            value={formData.teacherName}
-            onChange={(e) => setFormData(prev => ({ ...prev, teacherName: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+              First Name
+            </label>
+            <input
+              type="text"
+              id="first_name"
+              value={formData.first_name}
+              onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="last_name"
+              value={formData.last_name}
+              onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="classroomNumber" className="block text-sm font-medium text-gray-700 mb-1">
-            Classroom Number
-          </label>
-          <input
-            type="text"
-            id="classroomNumber"
-            value={formData.classroomNumber}
-            onChange={(e) => setFormData(prev => ({ ...prev, classroomNumber: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="grade" className="block text-sm font-medium text-gray-700 mb-1">
+              Grade
+            </label>
+            <input
+              type="text"
+              id="grade"
+              value={formData.grade}
+              onChange={(e) => setFormData(prev => ({ ...prev, grade: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700 mb-1">
+              Date of Birth
+            </label>
+            <input
+              type="date"
+              id="date_of_birth"
+              value={formData.date_of_birth}
+              onChange={(e) => setFormData(prev => ({ ...prev, date_of_birth: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="studentName" className="block text-sm font-medium text-gray-700 mb-1">
-            Student Name
-          </label>
-          <input
-            type="text"
-            id="studentName"
-            value={formData.studentName}
-            onChange={(e) => setFormData(prev => ({ ...prev, studentName: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="student_id" className="block text-sm font-medium text-gray-700 mb-1">
+              Student ID
+            </label>
+            <input
+              type="text"
+              id="student_id"
+              value={formData.student_id}
+              onChange={(e) => setFormData(prev => ({ ...prev, student_id: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
 
-        <div>
-          <label htmlFor="studentAge" className="block text-sm font-medium text-gray-700 mb-1">
-            Student Age
-          </label>
-          <input
-            type="number"
-            id="studentAge"
-            value={formData.studentAge}
-            onChange={(e) => setFormData(prev => ({ ...prev, studentAge: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="studentSchedule" className="block text-sm font-medium text-gray-700 mb-1">
-            Student Schedule
-          </label>
-          <select
-            id="studentSchedule"
-            value={formData.studentSchedule}
-            onChange={(e) => setFormData(prev => ({ ...prev, studentSchedule: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          >
-            <option value="">Select Schedule</option>
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-          </select>
+          <div>
+            <label htmlFor="referring_teacher" className="block text-sm font-medium text-gray-700 mb-1">
+              Referring Teacher
+            </label>
+            <input
+              type="text"
+              id="referring_teacher"
+              value={formData.referring_teacher}
+              onChange={(e) => setFormData(prev => ({ ...prev, referring_teacher: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
         </div>
 
         <div className="flex justify-end">
