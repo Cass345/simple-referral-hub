@@ -12,14 +12,19 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
     first_name: initialData?.first_name || '',
     last_name: initialData?.last_name || '',
     grade: initialData?.grade || '',
-    date_of_birth: initialData?.date_of_birth || '',
+    date_of_birth: initialData?.date_of_birth ? new Date(initialData.date_of_birth).toISOString().split('T')[0] : '',
     student_id: initialData?.student_id || '',
     referring_teacher: initialData?.referring_teacher || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Convert the date string to the correct format for PostgreSQL
+    const formattedData = {
+      ...formData,
+      date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString().split('T')[0] : null
+    };
+    onSubmit(formattedData);
   };
 
   return (
@@ -62,10 +67,10 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
               Grade
             </label>
             <input
-              type="text"
+              type="number"
               id="grade"
               value={formData.grade}
-              onChange={(e) => setFormData(prev => ({ ...prev, grade: e.target.value }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, grade: parseInt(e.target.value) || '' }))}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
