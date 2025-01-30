@@ -3,7 +3,6 @@ import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
@@ -30,6 +29,7 @@ const signupSchema = loginSchema.extend({
 const Settings = () => {
   const { user, profile, signIn, signUp, signOut } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -52,49 +52,61 @@ const Settings = () => {
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
+      setIsLoading(true);
       await signIn(values.email, values.password);
       toast({
         title: "Success",
         description: "Successfully logged in",
       });
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Error",
-        description: "Failed to login. Please check your credentials.",
+        description: error instanceof Error ? error.message : "Failed to login. Please check your credentials.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSignUp = async (values: z.infer<typeof signupSchema>) => {
     try {
+      setIsLoading(true);
       await signUp(values.email, values.password, values.firstName, values.lastName);
       toast({
         title: "Success",
         description: "Account created successfully",
       });
     } catch (error) {
+      console.error("Signup error:", error);
       toast({
         title: "Error",
-        description: "Failed to create account. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create account. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSignOut = async () => {
     try {
+      setIsLoading(true);
       await signOut();
       toast({
         title: "Success",
         description: "Successfully logged out",
       });
     } catch (error) {
+      console.error("Signout error:", error);
       toast({
         title: "Error",
         description: "Failed to log out",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,8 +124,12 @@ const Settings = () => {
                 <p><span className="font-medium">Role:</span> {profile.role}</p>
               </div>
             </div>
-            <Button onClick={handleSignOut} variant="destructive">
-              Sign Out
+            <Button 
+              onClick={handleSignOut} 
+              variant="destructive"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing out..." : "Sign Out"}
             </Button>
           </div>
         </Card>
@@ -137,7 +153,7 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,7 +166,7 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -163,7 +179,7 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input type="email" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -176,21 +192,22 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <div className="space-y-2">
-                <Button type="submit" className="w-full">
-                  Create Account
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   className="w-full"
                   onClick={() => setIsSignUp(false)}
+                  disabled={isLoading}
                 >
                   Already have an account? Login
                 </Button>
@@ -207,7 +224,7 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input type="email" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -220,21 +237,22 @@ const Settings = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <div className="space-y-2">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   className="w-full"
                   onClick={() => setIsSignUp(true)}
+                  disabled={isLoading}
                 >
                   Need an account? Sign Up
                 </Button>
