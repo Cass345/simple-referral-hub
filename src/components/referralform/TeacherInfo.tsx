@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
 import type { StudentProfile } from '@/types/database.types';
+import { supabase } from '@/lib/supabase';
 
 interface TeacherInfoProps {
   onSubmit: (data: Partial<StudentProfile>) => void;
@@ -8,6 +10,7 @@ interface TeacherInfoProps {
 }
 
 export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     first_name: initialData?.first_name || '',
     last_name: initialData?.last_name || '',
@@ -17,14 +20,44 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
     referring_teacher: initialData?.referring_teacher || ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Convert the date string to the correct format for PostgreSQL
-    const formattedData = {
-      ...formData,
-      date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString().split('T')[0] : null
-    };
-    onSubmit(formattedData);
+    
+    try {
+      // First check if we're authenticated
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Authentication Error",
+          description: "You must be logged in to submit referrals",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Format the data
+      const formattedData = {
+        ...formData,
+        date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString() : null,
+        created_by: session.user.id,
+        updated_at: new Date().toISOString()
+      };
+
+      onSubmit(formattedData);
+      
+      toast({
+        title: "Success",
+        description: "Student information saved successfully",
+      });
+    } catch (error) {
+      console.error('Error saving student info:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save student information. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

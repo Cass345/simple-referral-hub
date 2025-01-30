@@ -60,6 +60,8 @@ export interface StudentProfile {
   behavior_data?: BehaviorData[];
   mtss_tier?: number;
   goals?: string[];
+  created_by?: string;
+  updated_at?: string;
   teacherInfo?: {
     teacherName: string;
     grade: number;
