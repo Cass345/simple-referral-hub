@@ -1,19 +1,3 @@
-/*
-  # Initial Schema Setup for MTSS Management System
-
-  1. Tables Created:
-    - profiles (user profiles with roles)
-    - students (student information)
-    - referrals (student referrals)
-    - interventions (intervention tracking)
-    - progress_monitoring (intervention progress)
-
-  2. Security:
-    - RLS enabled on all tables
-    - Policies for role-based access control
-    - Proper constraints and foreign keys
-*/
-
 -- Create enum types
 CREATE TYPE user_role AS ENUM ('admin', 'teacher', 'specialist');
 CREATE TYPE referral_status AS ENUM ('pending', 'in_review', 'approved', 'declined');
@@ -32,8 +16,11 @@ CREATE TABLE IF NOT EXISTS profiles (
   is_active boolean DEFAULT true
 );
 
+-- Drop existing students table if it exists to ensure clean creation
+DROP TABLE IF EXISTS students CASCADE;
+
 -- Create students table
-CREATE TABLE IF NOT EXISTS students (
+CREATE TABLE students (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at timestamptz DEFAULT now(),
   first_name text NOT NULL,
@@ -54,11 +41,7 @@ CREATE TABLE IF NOT EXISTS referrals (
   concern_description text NOT NULL,
   previous_interventions text,
   status referral_status DEFAULT 'pending',
-  documents text[] DEFAULT '{}',
-  CONSTRAINT fk_student
-    FOREIGN KEY(student_id) 
-    REFERENCES students(id)
-    ON DELETE CASCADE
+  documents text[] DEFAULT '{}'
 );
 
 -- Create interventions table
@@ -74,15 +57,7 @@ CREATE TABLE IF NOT EXISTS interventions (
   goals text[] DEFAULT '{}',
   progress_notes text[] DEFAULT '{}',
   status intervention_status DEFAULT 'planned',
-  assigned_staff uuid[] DEFAULT '{}',
-  CONSTRAINT fk_student
-    FOREIGN KEY(student_id) 
-    REFERENCES students(id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_referral
-    FOREIGN KEY(referral_id) 
-    REFERENCES referrals(id)
-    ON DELETE CASCADE
+  assigned_staff uuid[] DEFAULT '{}'
 );
 
 -- Create progress_monitoring table
@@ -93,11 +68,7 @@ CREATE TABLE IF NOT EXISTS progress_monitoring (
   date date NOT NULL,
   metric_name text NOT NULL,
   metric_value numeric NOT NULL,
-  notes text,
-  CONSTRAINT fk_intervention
-    FOREIGN KEY(intervention_id) 
-    REFERENCES interventions(id)
-    ON DELETE CASCADE
+  notes text
 );
 
 -- Enable Row Level Security
@@ -107,7 +78,6 @@ ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interventions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE progress_monitoring ENABLE ROW LEVEL SECURITY;
 
--- Create policies
 -- Profiles policies
 CREATE POLICY "Users can view their own profile"
   ON profiles FOR SELECT
