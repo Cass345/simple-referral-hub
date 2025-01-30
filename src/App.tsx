@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MainSidebar } from "@/components/layout/Sidebar";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { AuthProvider } from "@/lib/auth";
 
 // Pages
 import Index from "./pages/Index";
@@ -22,31 +23,33 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <SidebarProvider>
-          <div className="min-h-screen flex w-full">
-            <MainSidebar />
-            <main className="flex-1 p-8">
-              <Breadcrumb />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/start-referral" element={<StartReferral />} />
-                <Route path="/student-profiles" element={<StudentProfiles />} />
-                <Route path="/progress-tracking" element={<ProgressTracking />} />
-                <Route path="/tier1-resources" element={<Tier1Resources />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/target-behaviors" element={<TargetBehaviors />} />
-                <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
-              </Routes>
-            </main>
-          </div>
-        </SidebarProvider>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full">
+              <MainSidebar />
+              <main className="flex-1 p-8">
+                <Breadcrumb />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/start-referral" element={<StartReferral />} />
+                  <Route path="/student-profiles" element={<StudentProfiles />} />
+                  <Route path="/progress-tracking" element={<ProgressTracking />} />
+                  <Route path="/tier1-resources" element={<Tier1Resources />} />
+                  <Route path="/resources" element={<Resources />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/target-behaviors" element={<TargetBehaviors />} />
+                  <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
+                </Routes>
+              </main>
+            </div>
+          </SidebarProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
