@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         getProfile(session.user);
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         getProfile(session.user);
@@ -52,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setState(s => ({ ...s, user, loading: true }));
       
+      // First try to get existing profile
       let { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -60,15 +63,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.log('Error fetching profile:', error);
+        
         // If profile doesn't exist, create it
         if (error.code === 'PGRST116') {
           const { data: newProfile, error: createError } = await supabase
             .from('profiles')
-            .insert({
+            .insert([{
               id: user.id,
-              email: user.email,
+              email: user.email || '',
               role: 'teacher'
-            })
+            }])
             .select()
             .single();
 
@@ -116,13 +120,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (authData.user) {
         const { error: profileError } = await supabase
           .from('profiles')
-          .insert({
+          .insert([{
             id: authData.user.id,
             email,
             first_name: firstName,
             last_name: lastName,
             role: 'teacher'
-          });
+          }]);
           
         if (profileError) throw profileError;
       }

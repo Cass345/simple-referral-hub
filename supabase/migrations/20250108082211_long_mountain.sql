@@ -14,19 +14,20 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Users can view profiles" ON profiles;
 DROP POLICY IF EXISTS "Users can insert their own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
 
 -- Create new policies
-CREATE POLICY "Enable read access for authenticated users"
+CREATE POLICY "Enable read access for all authenticated users"
   ON profiles FOR SELECT
   TO authenticated
   USING (true);
 
-CREATE POLICY "Enable insert access for users based on user_id"
+CREATE POLICY "Enable insert for authenticated users"
   ON profiles FOR INSERT
   TO authenticated
   WITH CHECK (auth.uid() = id);
 
-CREATE POLICY "Enable update access for users based on user_id"
+CREATE POLICY "Enable update for users based on id"
   ON profiles FOR UPDATE
   TO authenticated
   USING (auth.uid() = id)
