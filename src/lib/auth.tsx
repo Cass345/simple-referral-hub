@@ -50,53 +50,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function getProfile(user: User) {
     try {
-      setState(s => ({ ...s, user }));
+      setState(s => ({ ...s, user, loading: true }));
       
-      const { data, error } = await supabase
+      let { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
-      if (error && error.code === 'PGRST116') {
-        // Profile doesn't exist yet, create it
-        const { data: newProfile, error: createError } = await supabase
-          .from('profiles')
-          .insert({
-            id: user.id,
-            email: user.email,
-            role: 'teacher'
-          })
-          .select()
-          .single();
+      if (error) {
+        console.log('Error fetching profile:', error);
+        // If profile doesn't exist, create it
+        if (error.code === 'PGRST116') {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: user.id,
+              email: user.email,
+              role: 'teacher'
+            })
+            .select()
+            .single();
 
-        if (createError) {
-          console.error('Error creating profile:', createError);
-          setState(s => ({ ...s, profile: null, loading: false, isAdmin: false }));
-          return;
+          if (createError) {
+            throw createError;
+          }
+
+          profile = newProfile;
+        } else {
+          throw error;
         }
-
-        setState(s => ({ 
-          ...s, 
-          profile: newProfile, 
-          loading: false,
-          isAdmin: newProfile.role === 'admin'
-        }));
-      } else if (error) {
-        console.error('Error fetching profile:', error);
-        setState(s => ({ ...s, profile: null, loading: false, isAdmin: false }));
-        return;
-      } else {
-        setState(s => ({ 
-          ...s, 
-          profile: data, 
-          loading: false,
-          isAdmin: data.role === 'admin'
-        }));
       }
+
+      setState(s => ({
+        ...s,
+        profile,
+        loading: false,
+        isAdmin: profile?.role === 'admin'
+      }));
     } catch (error) {
       console.error('Error in getProfile:', error);
-      setState(s => ({ ...s, profile: null, loading: false, isAdmin: false }));
+      setState(s => ({ 
+        ...s, 
+        profile: null, 
+        loading: false,
+        isAdmin: false 
+      }));
     }
   }
 
@@ -122,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email,
             first_name: firstName,
             last_name: lastName,
-            role: 'teacher' // Default role for new signups
+            role: 'teacher'
           });
           
         if (profileError) throw profileError;
