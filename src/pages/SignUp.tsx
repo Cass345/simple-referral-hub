@@ -2,8 +2,7 @@ import React from 'react';
 import { School, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../types/supabase';
-import { populateSignUpTestData } from '../utils/testData';
+import { Database } from "@/types/database.types";
 
 const supabase = createClient<Database>(
   import.meta.env.VITE_SUPABASE_URL,
@@ -20,11 +19,6 @@ export function SignUp() {
   const [email, setEmail] = React.useState('');
   const [school, setSchool] = React.useState('');
   const [password, setPassword] = React.useState('');
-
-  // Populate test data in development mode
-  React.useEffect(() => {
-    populateSignUpTestData(setName, setEmail, setSchool, setPassword);
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
