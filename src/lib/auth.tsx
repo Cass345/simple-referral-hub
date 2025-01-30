@@ -39,9 +39,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
-        getProfile(session.user);
+        await getProfile(session.user);
       } else {
         setState({ user: null, profile: null, loading: false, isAdmin: false });
       }
@@ -62,28 +62,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error) {
-        console.log('Error fetching profile:', error);
-        
         // If profile doesn't exist, create it
-        if (error.code === 'PGRST116') {
-          const { data: newProfile, error: createError } = await supabase
-            .from('profiles')
-            .insert([{
-              id: user.id,
-              email: user.email || '',
-              role: 'teacher'
-            }])
-            .select()
-            .single();
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([{
+            id: user.id,
+            email: user.email || '',
+            role: 'teacher'
+          }])
+          .select()
+          .single();
 
-          if (createError) {
-            throw createError;
-          }
-
-          profile = newProfile;
-        } else {
-          throw error;
+        if (createError) {
+          console.error('Error creating profile:', createError);
+          throw createError;
         }
+
+        profile = newProfile;
       }
 
       setState(s => ({

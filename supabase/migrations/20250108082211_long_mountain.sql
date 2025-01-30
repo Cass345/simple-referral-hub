@@ -17,12 +17,12 @@ DROP POLICY IF EXISTS "Users can insert their own profile" ON profiles;
 DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
 
 -- Create new policies
-CREATE POLICY "Enable read access for all users"
+CREATE POLICY "Enable read access for all authenticated users"
   ON profiles FOR SELECT
   TO authenticated
   USING (true);
 
-CREATE POLICY "Enable insert for users own profile"
+CREATE POLICY "Enable insert for authenticated users"
   ON profiles FOR INSERT
   TO authenticated
   WITH CHECK (true);
