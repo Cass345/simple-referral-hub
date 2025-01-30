@@ -7,14 +7,14 @@ interface TeacherInfoProps {
   initialData?: Partial<StudentProfile>;
 }
 
-export function TeacherInfo({ onSubmit, initialData = {} }: TeacherInfoProps) {
+export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
   const [formData, setFormData] = useState({
-    first_name: initialData.first_name || '',
-    last_name: initialData.last_name || '',
-    grade: initialData.grade || '',
-    date_of_birth: initialData.date_of_birth || '',
-    student_id: initialData.student_id || '',
-    referring_teacher: initialData.referring_teacher || ''
+    first_name: initialData?.first_name || '',
+    last_name: initialData?.last_name || '',
+    grade: initialData?.grade || '',
+    date_of_birth: initialData?.date_of_birth || '',
+    student_id: initialData?.student_id || '',
+    referring_teacher: initialData?.referring_teacher || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
