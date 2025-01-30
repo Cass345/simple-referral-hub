@@ -1,6 +1,6 @@
 import { Home, Users, ClipboardList, BarChart2, BookOpen, Library, Settings, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/AuthProvider";
+import { useAuth } from "@/lib/auth";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Sidebar,
