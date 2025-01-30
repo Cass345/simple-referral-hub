@@ -32,10 +32,12 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
         .from('students')
         .select('*')
         .eq('student_id', studentId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      setExistingProfile(data);
+      if (data) {
+        setExistingProfile(data);
+      }
     } catch (error) {
       console.error('Error fetching profile:', error);
       toast({
@@ -48,12 +50,13 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
     }
   };
 
-  const handleSubmit = async (formData: any) => {
+  const handleTeacherInfoSubmit = async (teacherInfo: any) => {
     try {
       const { data, error } = await supabase
         .from('students')
         .upsert({
-          ...formData,
+          ...teacherInfo,
+          student_id: studentId || Math.random().toString(36).substring(7),
           updated_at: new Date().toISOString(),
         })
         .select()
@@ -63,15 +66,99 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
       
       toast({
         title: "Success",
-        description: "Student profile saved successfully",
+        description: "Teacher information saved successfully",
       });
       
-      onComplete(data);
+      if (data) {
+        setExistingProfile(data);
+      }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('Error saving teacher info:', error);
       toast({
         title: "Error",
-        description: "Failed to save student profile",
+        description: "Failed to save teacher information",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStudentBackgroundSubmit = async (backgroundData: StudentBackgroundData) => {
+    if (!existingProfile?.id) {
+      toast({
+        title: "Error",
+        description: "Please complete teacher information first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('students')
+        .update({
+          ...backgroundData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingProfile.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "Student background saved successfully",
+      });
+      
+      if (data) {
+        setExistingProfile(data);
+      }
+    } catch (error) {
+      console.error('Error saving background:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save student background",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleReferralReasonSubmit = async (referralData: ReferralFormData) => {
+    if (!existingProfile?.id) {
+      toast({
+        title: "Error",
+        description: "Please complete previous sections first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('students')
+        .update({
+          ...referralData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingProfile.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "Referral information saved successfully",
+      });
+      
+      if (data) {
+        onComplete(data);
+      }
+    } catch (error) {
+      console.error('Error saving referral:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save referral information",
         variant: "destructive",
       });
     }
@@ -84,23 +171,26 @@ export function StudentProfileSection({ onComplete, studentId }: StudentProfileS
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-semibold mb-6">Student Information & Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-6">
         <TeacherInfo 
           initialData={existingProfile?.teacherInfo} 
-          onSubmit={() => {}} 
+          onSubmit={handleTeacherInfoSubmit} 
         />
-        <StudentBackground 
-          initialData={existingProfile?.studentBackground}
-          onSubmit={() => {}}
-          onBack={() => {}}
-        />
-        <ReferralReason 
-          initialData={existingProfile?.referralReason}
-          onSubmit={() => {}}
-          onBack={() => {}}
-        />
-        <Button type="submit">Save Profile & Continue</Button>
-      </form>
+        {existingProfile && (
+          <>
+            <StudentBackground 
+              initialData={existingProfile?.studentBackground}
+              onSubmit={handleStudentBackgroundSubmit}
+              onBack={() => {}}
+            />
+            <ReferralReason 
+              initialData={existingProfile?.referralReason}
+              onSubmit={handleReferralReasonSubmit}
+              onBack={() => {}}
+            />
+          </>
+        )}
+      </div>
     </Card>
   );
 }
