@@ -1,57 +1,52 @@
-import React from 'react';
-import { School, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
-import { Database } from "@/types/database.types";
-
-const supabase = createClient<Database>(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
-
+import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { School, ArrowLeft } from "lucide-react";
+import { useState } from "react";
 export function SignUp() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const { toast } = useToast();
+  const [school, setSchool] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // State for form fields
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [school, setSchool] = React.useState('');
-  const [password, setPassword] = React.useState('');
-
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            name: formData.get('name'),
-            school: formData.get('school'),
-            role: 'teacher',
-          },
-        },
+            name,
+            school,
+            role: 'teacher'
+          }
+        }
       });
 
-      if (signUpError) throw signUpError;
+      if (error) throw error;
 
-      // Redirect to welcome tutorial
+      toast({
+        title: "Success",
+        description: "Account created successfully"
+      });
+
       navigate('/welcome');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); 
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

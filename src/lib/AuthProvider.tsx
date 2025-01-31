@@ -10,7 +10,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthContextType>({
     user: null,
     profile: null,
-    loading: true,
+    isLoading: true,
     isAdmin: false,
     isTeacher: false,
     signIn,
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (session?.user && isMounted) {
         await getProfile(session.user);
       } else {
-        setState(s => ({ ...s, loading: false }));
+        setState(s => ({ ...s, isLoading: false }));
       }
     };
 
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (session?.user) {
         await getProfile(session.user);
       } else {
-        setState({ user: null, profile: null, loading: false, isAdmin: false, isTeacher: false, signIn, signUp, signOut, createStudentProfile });
+        setState({ user: null, profile: null, isLoading: false, isAdmin: false, isTeacher: false, signIn, signUp, signOut, createStudentProfile });
       }
     });
 
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function getProfile(user: User) {
     try {
-      setState(s => ({ ...s, user, loading: true }));
+      setState(s => ({ ...s, user, isLoading: true }));
 
       console.log('Fetching profile for user:', user.id);
 
@@ -90,13 +90,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setState({
         ...state,
         profile: finalProfile,
-        loading: false,
+        isLoading: false,
         isAdmin: finalProfile?.role === 'admin',
         isTeacher: finalProfile?.role === 'teacher',
       });
     } catch (error) {
       console.error('Error in getProfile:', error);
-      setState({ ...state, profile: null, loading: false, isAdmin: false, isTeacher: false });
+      setState({ ...state, profile: null, isLoading: false, isAdmin: false, isTeacher: false });
     }
   }
 
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
 
-      setState({ ...state, user: null, profile: null, loading: false, isAdmin: false, isTeacher: false });
+      setState({ ...state, user: null, profile: null, isLoading: false, isAdmin: false, isTeacher: false });
     } catch (error) {
       console.error('Error in signOut:', error);
       throw error;
@@ -181,7 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ ...state, signIn, signUp, signOut, createStudentProfile }}>
-      {state.loading ? <LoadingScreen /> : children}
+      {state.isLoading ? <LoadingScreen /> : children}
     </AuthContext.Provider>
   );
 }
