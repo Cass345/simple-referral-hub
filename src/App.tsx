@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MainSidebar } from "@/components/layout/Sidebar";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { AuthProvider } from "@/lib/AuthProvider";
+import { AuthProvider } from "@/lib/auth";
 
 // Pages
 import Index from "./pages/Index";
@@ -18,28 +18,23 @@ import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
 import TargetBehaviors from "./pages/TargetBehaviors";
 import EvaluateBehavior from "./pages/EvaluateBehavior";
-import { DecisionTool } from "./pages/DecisionTool";
-import { LandingPage } from "./pages/LandingPage";
-import { SignUp } from "./pages/SignUp";
-import { Login } from "./pages/Login";
 
 const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <BrowserRouter>
-            <Toaster />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-                  <Route path="/decision-tool" element={<DecisionTool />} />
-                  <Route path="/landing-page" element={<LandingPage />} />
-                  <Route path="/sign-up" element={<SignUp />} />  
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/index" element={<Index />} />
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full">
+              <MainSidebar />
+              <main className="flex-1 p-8">
+                <Breadcrumb />
+                <Routes>
+                  <Route path="/" element={<Index />} />
                   <Route path="/start-referral" element={<StartReferral />} />
                   <Route path="/student-profiles" element={<StudentProfiles />} />
                   <Route path="/progress-tracking" element={<ProgressTracking />} />
@@ -48,12 +43,14 @@ function App() {
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/target-behaviors" element={<TargetBehaviors />} />
                   <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  );
-}
+                </Routes>
+              </main>
+            </div>
+          </SidebarProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
+  </QueryClientProvider>
+);
 
 export default App;

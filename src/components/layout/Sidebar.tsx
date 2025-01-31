@@ -1,7 +1,5 @@
-import { Home, Users, ClipboardList, BarChart2, BookOpen, Library, Settings, LogOut } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth";
-import { useToast } from "@/components/ui/use-toast";
+import { Home, Users, ClipboardList, BarChart2, BookOpen, Library, Settings } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -25,27 +23,6 @@ const menuItems = [
 
 export function MainSidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
-  const { toast } = useToast();
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Logged out successfully",
-        description: "You have been logged out of your account",
-      });
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast({
-        variant: "destructive",
-        title: "Error logging out",
-        description: "There was a problem logging out. Please try again.",
-      });
-    }
-  };
 
   return (
     <Sidebar>
@@ -58,7 +35,7 @@ export function MainSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={location.pathname === item.path ? "bg-primary text-primary-foreground" : ""}
+                    className={location.pathname === item.path ? "bg-primary text-white" : ""}
                   >
                     <Link to={item.path} className="flex items-center gap-2">
                       <item.icon className="h-4 w-4" />
@@ -67,17 +44,6 @@ export function MainSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              
-              {/* Logout Button */}
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={handleLogout}
-                  className="w-full text-destructive hover:text-destructive"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
