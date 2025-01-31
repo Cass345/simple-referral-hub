@@ -18,6 +18,10 @@ import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
 import TargetBehaviors from "./pages/TargetBehaviors";
 import EvaluateBehavior from "./pages/EvaluateBehavior";
+import { DecisionTool } from "./pages/DecisionTool";
+import { LandingPage } from "./pages/LandingPage";
+import { SignUp } from "./pages/SignUp";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +39,10 @@ const App = () => (
                 <Breadcrumb />
                 <Routes>
                   <Route path="/" element={<Index />} />
+                  <Route path="/decision-tool" element={<DecisionTool />} />
+                  <Route path="/landing-page" element={<LandingPage />} />
+                  <Route path="/sign-up" element={<SignUp />} />  
+                  <Route path="/login" element={<Login />} />
                   <Route path="/start-referral" element={<StartReferral />} />
                   <Route path="/student-profiles" element={<StudentProfiles />} />
                   <Route path="/progress-tracking" element={<ProgressTracking />} />
