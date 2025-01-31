@@ -20,31 +20,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user && isMounted) {
-        await getProfile(session.user);
-      } else {
-        setState(s => ({ ...s, loading: false }));
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user && mounted) {
+          await getProfile(session.user);
+        } else if (mounted) {
+          setState(s => ({ ...s, loading: false }));
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+        if (mounted) {
+          setState(s => ({ ...s, loading: false }));
+        }
       }
     };
 
     checkSession();
 
-    const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
+      
       console.log('Auth state changed:', _event, session?.user?.id);
       if (session?.user) {
         await getProfile(session.user);
       } else {
-        setState({ user: null, profile: null, loading: false, isAdmin: false, isTeacher: false, signIn, signUp, signOut, createStudentProfile });
+        setState({ 
+          user: null, 
+          profile: null, 
+          loading: false, 
+          isAdmin: false, 
+          isTeacher: false, 
+          signIn, 
+          signUp, 
+          signOut, 
+          createStudentProfile 
+        });
       }
     });
 
     return () => {
-      isMounted = false;
-      subscription.subscription?.unsubscribe();
+      mounted = false;
+      subscription?.unsubscribe();
     };
   }, []);
 
@@ -87,16 +106,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         finalProfile = newProfile;
       }
 
-      setState({
-        ...state,
+      setState(s => ({
+        ...s,
         profile: finalProfile,
         loading: false,
         isAdmin: finalProfile?.role === 'admin',
         isTeacher: finalProfile?.role === 'teacher',
-      });
+      }));
     } catch (error) {
       console.error('Error in getProfile:', error);
-      setState({ ...state, profile: null, loading: false, isAdmin: false, isTeacher: false });
+      setState(s => ({ 
+        ...s, 
+        profile: null, 
+        loading: false, 
+        isAdmin: false, 
+        isTeacher: false 
+      }));
     }
   }
 
@@ -180,14 +205,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signUp, signOut, createStudentProfile }}>
+    <AuthContext.Provider value={state}>
       {state.loading ? <LoadingScreen /> : children}
     </AuthContext.Provider>
   );
 }
 
-
-// 🔹 Loading Screen Component
 function LoadingScreen() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
