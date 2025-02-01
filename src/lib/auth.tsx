@@ -69,7 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function getProfile(user: User) {
     try {
-      setState(s => ({ ...s, user, loading: true }));
+      console.log('Fetching profile for user:', user.id);
+      setState(s => ({ ...s, loading: true }));
       
       const { data: profile, error } = await supabase
         .from('profiles')
