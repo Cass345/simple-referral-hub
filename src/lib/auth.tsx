@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { supabase } from './supabase';
 import type { Database } from '../types/database.types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -78,8 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error) {
+        console.log('Profile fetch error:', error);
         if (error.code === 'PGRST116') {
-          // Profile doesn't exist, create it
+          console.log('Creating new profile for user:', user.id);
           const { data: newProfile, error: createError } = await supabase
             .from('profiles')
             .insert([{
@@ -90,7 +91,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .select()
             .single();
 
-          if (createError) throw createError;
+          if (createError) {
+            console.error('Profile creation error:', createError);
+            throw createError;
+          }
 
           setState({
             user,
@@ -134,6 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (signUpError) throw signUpError;
     
     if (authData.user) {
+      console.log('Creating profile for new user:', authData.user.id);
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([{
@@ -144,7 +149,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: 'teacher'
         }]);
         
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Profile creation error during signup:', profileError);
+        throw profileError;
+      }
     }
   }
 
