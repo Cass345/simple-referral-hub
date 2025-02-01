@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Building2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-type Step = "student-type" | "concerns" | "referral-required";
+type Step = "welcome" | "student-type" | "concerns" | "referral-required";
 
 interface StepContent {
   title: string;
+  description?: string;
   options: {
     label: string;
     value: string;
@@ -16,10 +17,20 @@ interface StepContent {
 }
 
 export const DecisionTool = () => {
-  const [currentStep, setCurrentStep] = useState<Step>("student-type");
-  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState<Step>("welcome");
 
   const steps: Record<Step, StepContent> = {
+    "welcome": {
+      title: "MTSS Referral Decision Tool",
+      description: "This tool will guide you through the referral process for IP and ECAP students. Answer a few questions to determine the appropriate next steps.",
+      options: [
+        {
+          label: "Start",
+          value: "start",
+          action: () => setCurrentStep("student-type"),
+        },
+      ],
+    },
     "student-type": {
       title: "Is this an IP Student or an ECAP Student?",
       options: [
@@ -61,7 +72,7 @@ export const DecisionTool = () => {
         {
           label: "Begin MTSS Referral",
           value: "begin",
-          action: () => navigate("/login", { state: { isSignUp: true } }),
+          action: () => window.location.href = "/login?isSignUp=true",
         },
       ],
     },
@@ -77,6 +88,12 @@ export const DecisionTool = () => {
       
       <h2 className="text-2xl font-bold">{currentStepContent.title}</h2>
       
+      {currentStepContent.description && (
+        <p className="text-muted-foreground">
+          {currentStepContent.description}
+        </p>
+      )}
+
       {currentStep === "referral-required" && (
         <div className="text-left space-y-4">
           <div>
@@ -102,14 +119,16 @@ export const DecisionTool = () => {
           </Button>
         ))}
         
-        <Button 
-          variant="secondary" 
-          className="w-full"
-          size="lg"
-          onClick={() => setCurrentStep("student-type")}
-        >
-          Start Over
-        </Button>
+        {currentStep !== "welcome" && (
+          <Button 
+            variant="secondary" 
+            className="w-full"
+            size="lg"
+            onClick={() => setCurrentStep("welcome")}
+          >
+            Start Over
+          </Button>
+        )}
         
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
