@@ -25,10 +25,11 @@ CREATE POLICY "Enable read access for all authenticated users"
   TO authenticated
   USING (true);
 
+-- Allow profile creation during signup
 CREATE POLICY "Enable insert for authenticated users"
   ON profiles FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = id);
+  WITH CHECK (true);
 
 CREATE POLICY "Enable update for users based on id"
   ON profiles FOR UPDATE
