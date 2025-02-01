@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StudentProfileSection } from "@/components/referralform/StudentProfileSection";
 import { BaselineDataSection } from "@/components/referralform/BaselineDataSection";
 import { Tier1InterventionSection } from "@/components/referralform/Tier1InterventionSection";
 import { StudentTypeSelection } from "@/components/referralform/StudentTypeSelection";
+import { useAuth } from "@/lib/auth";
 import type { StudentProfile } from "@/types/database.types";
 
 type ReferralStep = 'type-selection' | 'profile' | 'baseline' | 'interventions';
@@ -12,6 +13,13 @@ const StartReferral = () => {
   const [currentStep, setCurrentStep] = useState<ReferralStep>('type-selection');
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   const handleStudentTypeSelect = (type: 'IP' | 'ECAP') => {
     setCurrentStep('profile');
@@ -29,6 +37,8 @@ const StartReferral = () => {
   const handleReferralComplete = () => {
     navigate('/student-profiles');
   };
+
+  if (!user) return null;
 
   return (
     <div className="animate-fade-in">
