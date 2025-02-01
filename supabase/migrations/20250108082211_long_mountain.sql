@@ -28,7 +28,7 @@ CREATE POLICY "Enable read access for all authenticated users"
 CREATE POLICY "Enable insert for authenticated users"
   ON profiles FOR INSERT
   TO authenticated
-  WITH CHECK (true);
+  WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Enable update for users based on id"
   ON profiles FOR UPDATE
