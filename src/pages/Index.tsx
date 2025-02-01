@@ -29,25 +29,24 @@ const Index = () => {
           ) : (
             <>
               <Button asChild className="w-full" size="lg">
-                <Link to="/login">
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Sign In
+                <Link to="/login" state={{ isSignUp: true }}>
+                  Start
                 </Link>
               </Button>
               
-              <Button asChild variant="outline" className="w-full" size="lg">
-                <Link to="/login" state={{ isSignUp: true }}>
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Create Account
-                </Link>
-              </Button>
+              <p className="text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Button variant="link" asChild className="p-0 h-auto font-normal" size="sm">
+                  <Link to="/login">Sign in</Link>
+                </Button>
+              </p>
             </>
           )}
         </div>
 
-        {user && (
+        {!user && (
           <div className="text-sm text-muted-foreground">
-            <p>Access the complete MTSS referral process:</p>
+            <p>The MTSS referral process includes:</p>
             <ul className="list-disc list-inside mt-2 text-left">
               <li>Student type identification (IP/ECAP)</li>
               <li>Baseline data collection</li>
