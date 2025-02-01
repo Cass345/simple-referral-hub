@@ -1,25 +1,32 @@
-import { QuickActions } from "@/components/home/QuickActions";
-import { Overview } from "@/components/home/Overview";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { Building2 } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Welcome to MTSS Referral Tool</h1>
+    <div className="container mx-auto max-w-md py-12 animate-fade-in">
+      <Card className="p-8 text-center space-y-6">
+        <div className="flex justify-center">
+          <Building2 className="h-16 w-16 text-primary" />
+        </div>
+        
+        <h1 className="text-2xl font-bold">MTSS Referral Decision Tool</h1>
+        
         <p className="text-muted-foreground">
-          Streamline your student support process with our comprehensive MTSS management system.
+          This tool will guide you through the referral process for IP and ECAP students. Answer a few questions to determine the appropriate next steps.
         </p>
-      </div>
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-        <QuickActions />
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Overview</h2>
-        <Overview />
-      </section>
+        <div className="space-y-3">
+          <Button asChild className="w-full" size="lg">
+            <Link to="/start-referral">Start</Link>
+          </Button>
+          
+          <Button asChild variant="outline" className="w-full" size="lg">
+            <Link to="/login">Already have an account? Sign in</Link>
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 };

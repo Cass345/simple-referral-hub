@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card } from "@/components/ui/card";
 import { StudentProfileSection } from "@/components/referralform/StudentProfileSection";
 import { BaselineDataSection } from "@/components/referralform/BaselineDataSection";
 import { Tier1InterventionSection } from "@/components/referralform/Tier1InterventionSection";
+import { StudentTypeSelection } from "@/components/referralform/StudentTypeSelection";
 import type { StudentProfile } from "@/types/database.types";
 
-type ReferralStep = 'profile' | 'baseline' | 'interventions';
+type ReferralStep = 'type-selection' | 'profile' | 'baseline' | 'interventions';
 
 const StartReferral = () => {
-  const [currentStep, setCurrentStep] = useState<ReferralStep>('profile');
+  const [currentStep, setCurrentStep] = useState<ReferralStep>('type-selection');
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const navigate = useNavigate();
+
+  const handleStudentTypeSelect = (type: 'IP' | 'ECAP') => {
+    setCurrentStep('profile');
+  };
 
   const handleProfileComplete = (profile: StudentProfile) => {
     setStudentProfile(profile);
@@ -30,27 +34,33 @@ const StartReferral = () => {
     <div className="animate-fade-in">
       <h1 className="text-3xl font-bold mb-6">Start a New Referral</h1>
       
-      {currentStep === 'profile' && (
-        <StudentProfileSection 
-          onComplete={handleProfileComplete}
-          studentId={studentProfile?.student_id}
-        />
-      )}
+      <div className="container mx-auto max-w-md">
+        {currentStep === 'type-selection' && (
+          <StudentTypeSelection onSelect={handleStudentTypeSelect} />
+        )}
+        
+        {currentStep === 'profile' && (
+          <StudentProfileSection 
+            onComplete={handleProfileComplete}
+            studentId={studentProfile?.student_id}
+          />
+        )}
 
-      {currentStep === 'baseline' && studentProfile && (
-        <BaselineDataSection
-          studentId={studentProfile.student_id}
-          concerns={studentProfile.concerns || []}
-          onComplete={handleBaselineComplete}
-        />
-      )}
+        {currentStep === 'baseline' && studentProfile && (
+          <BaselineDataSection
+            studentId={studentProfile.student_id}
+            concerns={studentProfile.concerns || []}
+            onComplete={handleBaselineComplete}
+          />
+        )}
 
-      {currentStep === 'interventions' && studentProfile && (
-        <Tier1InterventionSection
-          studentId={studentProfile.student_id}
-          onComplete={handleReferralComplete}
-        />
-      )}
+        {currentStep === 'interventions' && studentProfile && (
+          <Tier1InterventionSection
+            studentId={studentProfile.student_id}
+            onComplete={handleReferralComplete}
+          />
+        )}
+      </div>
 
       {/* Progress indicator */}
       <div className="flex justify-between mt-6">
