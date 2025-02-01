@@ -29,26 +29,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        getProfile(session.user);
-      } else {
+    // Initialize auth state
+    const initializeAuth = async () => {
+      try {
+        // Get initial session
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          console.log('Initial session found for user:', session.user.id);
+          await getProfile(session.user);
+        } else {
+          console.log('No initial session found');
+          setState(s => ({ ...s, loading: false }));
+        }
+
+        // Set up auth state change listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+          console.log('Auth state changed:', event, session?.user?.id);
+          
+          if (session?.user) {
+            await getProfile(session.user);
+          } else {
+            setState({ 
+              user: null, 
+              profile: null, 
+              loading: false, 
+              isAdmin: false 
+            });
+          }
+        });
+
+        return () => {
+          subscription.unsubscribe();
+        };
+      } catch (error) {
+        console.error('Error initializing auth:', error);
         setState(s => ({ ...s, loading: false }));
       }
-    });
+    };
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      console.log('Auth state changed:', _event, session?.user?.id);
-      if (session?.user) {
-        await getProfile(session.user);
-      } else {
-        setState({ user: null, profile: null, loading: false, isAdmin: false });
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    initializeAuth();
   }, []);
 
   async function getProfile(user: User) {
@@ -57,32 +77,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       console.log('Fetching profile for user:', user.id);
       
-      // First try to get existing profile
-      let { data: profile, error } = await supabase
+      const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
       if (error) {
-        console.log('Creating new profile for user:', user.id);
-        // Create new profile if it doesn't exist
-        const { data: newProfile, error: createError } = await supabase
-          .from('profiles')
-          .insert([{
-            id: user.id,
-            email: user.email || '',
-            role: 'teacher'
-          }])
-          .select()
-          .single();
+        if (error.code === 'PGRST116') {
+          console.log('Creating new profile for user:', user.id);
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert([{
+              id: user.id,
+              email: user.email || '',
+              role: 'teacher'
+            }])
+            .select()
+            .single();
 
-        if (createError) {
-          console.error('Error creating profile:', createError);
-          throw createError;
+          if (createError) {
+            console.error('Error creating profile:', createError);
+            throw createError;
+          }
+
+          setState(s => ({
+            ...s,
+            profile: newProfile,
+            loading: false,
+            isAdmin: newProfile?.role === 'admin'
+          }));
+          return;
         }
-
-        profile = newProfile;
+        
+        console.error('Error fetching profile:', error);
+        throw error;
       }
 
       setState(s => ({
@@ -166,8 +195,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const value = {
+    ...state,
+    signIn,
+    signUp,
+    signOut
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
