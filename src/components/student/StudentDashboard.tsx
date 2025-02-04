@@ -25,10 +25,10 @@ export function StudentDashboard({ student }: StudentDashboardProps) {
   const [dataValue, setDataValue] = useState("");
   const { toast } = useToast();
 
-  const mtssProgress = (student.mtss_tier - 1) * 33.33;
+  // Calculate MTSS progress with null check
+  const mtssProgress = student?.mtss_tier ? (Number(student.mtss_tier) - 1) * 33.33 : 0;
 
   const handleDataSubmit = () => {
-    // Here you would typically save the data to your backend
     toast({
       title: "Data Saved",
       description: "New data point has been recorded",
@@ -36,13 +36,24 @@ export function StudentDashboard({ student }: StudentDashboardProps) {
     setDataValue("");
   };
 
+  // If student is undefined, show loading or error state
+  if (!student) {
+    return (
+      <div className="p-6">
+        <Card className="p-6">
+          <p className="text-muted-foreground">Loading student data...</p>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">MTSS Process Progress</h3>
         <Progress value={mtssProgress} className="mb-2" />
         <p className="text-sm text-muted-foreground">
-          Current Tier: {student.mtss_tier}
+          Current Tier: {student.mtss_tier || 'Not Set'}
         </p>
       </Card>
 
