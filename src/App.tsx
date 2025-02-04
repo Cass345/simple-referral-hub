@@ -21,6 +21,7 @@ import TargetBehaviors from "./pages/TargetBehaviors";
 import EvaluateBehavior from "./pages/EvaluateBehavior";
 import Login from "./pages/Login";
 import { DecisionTool } from "./pages/DecisionTool";
+import Dashboard from "./pages/Dashboard";
 
 const AppContent = () => {
   const { user } = useAuth();
@@ -32,9 +33,9 @@ const AppContent = () => {
         <main className={`flex-1 ${user ? 'p-8' : 'p-0'}`}>
           {user && <Breadcrumb />}
           <Routes>
-            <Route path="/" element={<DecisionTool />} />
+            <Route path="/" element={user ? <Dashboard /> : <DecisionTool />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/index" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/start-referral" element={<StartReferral />} />
             <Route path="/student-profiles" element={<StudentProfiles />} />
             <Route path="/progress-tracking" element={<ProgressTracking />} />
