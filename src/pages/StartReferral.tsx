@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { StudentProfileSection } from "@/components/referralform/StudentProfileSection";
 import { BaselineDataSection } from "@/components/referralform/BaselineDataSection";
 import { Tier1InterventionSection } from "@/components/referralform/Tier1InterventionSection";
-import { StudentTypeSelection } from "@/components/referralform/StudentTypeSelection";
 import { useAuth } from "@/lib/auth";
 import type { StudentProfile } from "@/types/database.types";
 
-type ReferralStep = 'type-selection' | 'profile' | 'baseline' | 'interventions';
+type ReferralStep = 'profile' | 'baseline' | 'interventions';
 
 const StartReferral = () => {
-  const [currentStep, setCurrentStep] = useState<ReferralStep>('type-selection');
+  const [currentStep, setCurrentStep] = useState<ReferralStep>('profile');
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -20,10 +19,6 @@ const StartReferral = () => {
       navigate('/login');
     }
   }, [user, navigate]);
-
-  const handleStudentTypeSelect = (type: 'IP' | 'ECAP') => {
-    setCurrentStep('profile');
-  };
 
   const handleProfileComplete = (profile: StudentProfile) => {
     setStudentProfile(profile);
@@ -45,10 +40,6 @@ const StartReferral = () => {
       <h1 className="text-3xl font-bold mb-6">Start a New Referral</h1>
       
       <div className="container mx-auto max-w-md">
-        {currentStep === 'type-selection' && (
-          <StudentTypeSelection onSelect={handleStudentTypeSelect} />
-        )}
-        
         {currentStep === 'profile' && (
           <StudentProfileSection 
             onComplete={handleProfileComplete}
