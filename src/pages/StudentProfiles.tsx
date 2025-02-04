@@ -1,25 +1,27 @@
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { mockStudentProfile } from "@/mockData";
-import { StudentDashboard } from "@/components/student/StudentDashboard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Eye, Pencil, Trash2, Download } from "lucide-react";
 import type { StudentProfile } from "@/types/database.types";
 
 const StudentProfiles = () => {
   const [students, setStudents] = useState<StudentProfile[]>([mockStudentProfile]);
-  const [selectedStudent, setSelectedStudent] = useState<StudentProfile | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTier, setSelectedTier] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStudents();
@@ -37,133 +39,141 @@ const StudentProfiles = () => {
       console.error('Error fetching students:', error);
       toast({
         title: "Error",
-        description: "Failed to load student profiles"
+        description: "Failed to load student profiles",
+        variant: "destructive"
       });
     }
   };
 
+  const handleExportCSV = () => {
+    // Implement CSV export functionality
+    toast({
+      title: "Coming Soon",
+      description: "CSV export functionality will be available soon"
+    });
+  };
+
+  const filteredStudents = students.filter(student => {
+    const matchesSearch = `${student.first_name} ${student.last_name}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesTier = selectedTier === "all" || student.mtss_tier === selectedTier;
+    // Add more filters as needed
+    return matchesSearch && matchesTier;
+  });
+
   return (
-    <div className="animate-fade-in space-y-6">
-      <h1 className="text-3xl font-bold mb-6">Student Profiles</h1>
-      
-      <div className="grid md:grid-cols-3 gap-6">
-        <Card className="md:col-span-1 p-6">
-          <h2 className="text-xl font-semibold mb-4">Student List</h2>
-          <div className="space-y-2">
-            {students.map((student) => (
-              <Button
-                key={student.id}
-                variant={selectedStudent?.id === student.id ? "default" : "outline"}
-                className="w-full justify-start"
-                onClick={() => setSelectedStudent(student)}
-              >
-                {student.first_name} {student.last_name}
-              </Button>
+    <div className="p-6 max-w-[1200px] mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex-1 max-w-xl">
+          <Input
+            type="search"
+            placeholder="Search students..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full"
+          />
+        </div>
+        <div className="flex gap-4 ml-4">
+          <Button variant="outline" onClick={handleExportCSV}>
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+          </Button>
+          <Button onClick={() => navigate("/start-referral")}>
+            + Add Student
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        <Select value={selectedTier} onValueChange={setSelectedTier}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="All Tiers" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Tiers</SelectItem>
+            <SelectItem value="1">Tier 1</SelectItem>
+            <SelectItem value="2">Tier 2</SelectItem>
+            <SelectItem value="3">Tier 3</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="bg-white rounded-lg shadow">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Student
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Grade
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                MTSS Tier
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredStudents.map((student) => (
+              <tr key={student.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4">
+                  <Link 
+                    to={`/student/${student.id}`}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    {student.first_name} {student.last_name}
+                  </Link>
+                </td>
+                <td className="px-6 py-4">{student.grade}</td>
+                <td className="px-6 py-4">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    ${student.mtss_tier === '1' ? 'bg-blue-100 text-blue-800' :
+                    student.mtss_tier === '2' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-red-100 text-red-800'}`}>
+                    Tier {student.mtss_tier}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    No Referral
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
             ))}
-          </div>
-        </Card>
-
-        {selectedStudent && (
-          <Card className="md:col-span-2 p-6">
-            <Tabs defaultValue="dashboard">
-              <TabsList>
-                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                <TabsTrigger value="info">Student Information</TabsTrigger>
-                <TabsTrigger value="goals">Focus Areas & Goals</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="dashboard">
-                <StudentDashboard student={selectedStudent} />
-              </TabsContent>
-
-              <TabsContent value="info" className="space-y-4">
-                <h3 className="text-lg font-semibold">Personal Information</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Name</p>
-                    <p>{selectedStudent.first_name} {selectedStudent.last_name}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Student ID</p>
-                    <p>{selectedStudent.student_id}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Grade</p>
-                    <p>{selectedStudent.grade}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Date of Birth</p>
-                    <p>{new Date(selectedStudent.date_of_birth).toLocaleDateString()}</p>
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-semibold mt-6">Contact Information</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Parent/Guardian</p>
-                    <p>{selectedStudent.parent_name || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Phone</p>
-                    <p>{selectedStudent.parent_phone || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p>{selectedStudent.parent_email || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Primary Language</p>
-                    <p>{selectedStudent.language || 'Not provided'}</p>
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="goals" className="space-y-4">
-                <h3 className="text-lg font-semibold">Referral Information</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Referring Teacher</p>
-                    <p>{selectedStudent.referring_teacher || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Referral Reasons</p>
-                    <ul className="list-disc list-inside">
-                      {selectedStudent.referral_reasons?.map((reason, index) => (
-                        <li key={index}>{reason}</li>
-                      )) || <p>No referral reasons provided</p>}
-                    </ul>
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-semibold mt-6">Goals & Objectives</h3>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Goal</TableHead>
-                      <TableHead>Baseline</TableHead>
-                      <TableHead>Target</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedStudent.goals?.map((goal, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{goal}</TableCell>
-                        <TableCell>Pending</TableCell>
-                        <TableCell>Pending</TableCell>
-                        <TableCell>In Progress</TableCell>
-                      </TableRow>
-                    )) || (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center">No goals set yet</TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TabsContent>
-            </Tabs>
-          </Card>
-        )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
-import { Home, Users, ClipboardList, BarChart2, BookOpen, Library, Settings } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Home, Users, ClipboardList, BarChart2, BookOpen, Library, Settings, LogOut } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
 const menuItems = [
@@ -23,6 +26,25 @@ const menuItems = [
 
 export function MainSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate('/login');
+      toast({
+        title: "Signed out successfully",
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: "Error signing out",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Sidebar>
@@ -48,6 +70,15 @@ export function MainSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="mt-auto p-4">
+        <SidebarMenuButton
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-2 text-red-500 hover:text-red-600"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Sign Out</span>
+        </SidebarMenuButton>
+      </SidebarFooter>
     </Sidebar>
   );
 }
