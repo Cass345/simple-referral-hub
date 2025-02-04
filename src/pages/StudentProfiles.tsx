@@ -57,7 +57,7 @@ const StudentProfiles = () => {
     const matchesSearch = `${student.first_name} ${student.last_name}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const matchesTier = selectedTier === "all" || student.mtss_tier === selectedTier;
+    const matchesTier = selectedTier === "all" || student.mtss_tier?.toString() === selectedTier;
     // Add more filters as needed
     return matchesSearch && matchesTier;
   });
