@@ -1,22 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import type { Database } from '../types/database.types';
-
-type Profile = Database['public']['Tables']['profiles']['Row'];
-
-interface AuthState {
-  user: User | null;
-  profile: Profile | null;
-  loading: boolean;
-  isAdmin: boolean;
-}
-
-interface AuthContextType extends AuthState {
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
-  signOut: () => Promise<void>;
-}
+import { getProfile } from './auth/profileManager';
+import { signIn, signUp, signOut } from './auth/authOperations';
+import type { AuthContextType, AuthState } from './types/auth.types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -35,7 +21,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (session?.user) {
           console.log('Initial session found for user:', session.user.id);
-          await getProfile(session.user);
+          const { profile, isAdmin } = await getProfile(session.user);
+          setState({
+            user: session.user,
+            profile,
+            loading: false,
+            isAdmin
+          });
         } else {
           setState(s => ({ ...s, loading: false }));
         }
@@ -44,7 +36,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('Auth state changed:', event, session?.user?.id);
           
           if (session?.user) {
-            await getProfile(session.user);
+            const { profile, isAdmin } = await getProfile(session.user);
+            setState({
+              user: session.user,
+              profile,
+              loading: false,
+              isAdmin
+            });
           } else {
             setState({ 
               user: null, 
@@ -66,101 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth();
   }, []);
-
-  async function getProfile(user: User) {
-    try {
-      console.log('Fetching profile for user:', user.id);
-      setState(s => ({ ...s, loading: true }));
-      
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) {
-        console.log('Profile fetch error:', error);
-        if (error.code === 'PGRST116') {
-          console.log('Creating new profile for user:', user.id);
-          const { data: newProfile, error: createError } = await supabase
-            .from('profiles')
-            .insert([{
-              id: user.id,
-              email: user.email || '',
-              role: 'teacher'
-            }])
-            .select()
-            .single();
-
-          if (createError) {
-            console.error('Profile creation error:', createError);
-            throw createError;
-          }
-
-          setState({
-            user,
-            profile: newProfile,
-            loading: false,
-            isAdmin: newProfile?.role === 'admin'
-          });
-          return;
-        }
-        throw error;
-      }
-
-      setState({
-        user,
-        profile,
-        loading: false,
-        isAdmin: profile?.role === 'admin'
-      });
-    } catch (error) {
-      console.error('Error in getProfile:', error);
-      setState(s => ({ 
-        ...s, 
-        profile: null, 
-        loading: false,
-        isAdmin: false 
-      }));
-    }
-  }
-
-  async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-  }
-
-  async function signUp(email: string, password: string, firstName: string, lastName: string) {
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    
-    if (signUpError) throw signUpError;
-    
-    if (authData.user) {
-      console.log('Creating profile for new user:', authData.user.id);
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([{
-          id: authData.user.id,
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          role: 'teacher'
-        }]);
-        
-      if (profileError) {
-        console.error('Profile creation error during signup:', profileError);
-        throw profileError;
-      }
-    }
-  }
-
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-  }
 
   const value = {
     ...state,
