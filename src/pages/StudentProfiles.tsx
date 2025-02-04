@@ -137,7 +137,7 @@ const StudentProfiles = () => {
               <tr key={student.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <Link 
-                    to={`/student/${student.id}`}
+                    to={`/student-dashboard/${student.id}`}
                     className="text-primary hover:underline font-medium"
                   >
                     {student.first_name} {student.last_name}

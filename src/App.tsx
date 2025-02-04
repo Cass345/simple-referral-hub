@@ -22,6 +22,7 @@ import EvaluateBehavior from "./pages/EvaluateBehavior";
 import Login from "./pages/Login";
 import { DecisionTool } from "./pages/DecisionTool";
 import Dashboard from "./pages/Dashboard";
+import { StudentDashboard } from "./components/student/StudentDashboard";
 
 const AppContent = () => {
   const { user } = useAuth();
@@ -37,13 +38,14 @@ const AppContent = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/start-referral" element={<StartReferral />} />
-            <Route path="/student-profiles" element={<StudentProfiles />} />
+            <Route path="/student-profiles" element={<StudentProfiles />} />        
             <Route path="/progress-tracking" element={<ProgressTracking />} />
             <Route path="/tier1-resources" element={<Tier1Resources />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/target-behaviors" element={<TargetBehaviors />} />
             <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
+            <Route path="/student-dashboard/:id" element={<StudentDashboard student={undefined} />} />
           </Routes>
         </main>
       </div>
