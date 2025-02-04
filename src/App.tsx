@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MainSidebar } from "@/components/layout/Sidebar";
@@ -20,6 +20,7 @@ import Settings from "./pages/Settings";
 import TargetBehaviors from "./pages/TargetBehaviors";
 import EvaluateBehavior from "./pages/EvaluateBehavior";
 import Login from "./pages/Login";
+import { DecisionTool } from "./pages/DecisionTool";
 
 const AppContent = () => {
   const { user } = useAuth();
@@ -31,8 +32,9 @@ const AppContent = () => {
         <main className={`flex-1 ${user ? 'p-8' : 'p-0'}`}>
           {user && <Breadcrumb />}
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<DecisionTool />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/start-referral" element={<StartReferral />} />
             <Route path="/student-profiles" element={<StudentProfiles />} />
             <Route path="/progress-tracking" element={<ProgressTracking />} />
