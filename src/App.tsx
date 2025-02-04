@@ -45,7 +45,7 @@ const AppContent = () => {
             <Route path="/settings" element={<Settings />} />
             <Route path="/target-behaviors" element={<TargetBehaviors />} />
             <Route path="/evaluate-behavior" element={<EvaluateBehavior />} />
-            <Route path="/student-dashboard/:id" element={<StudentDashboard student={undefined} />} />
+            <Route path="/student-dashboard/:id" element={<StudentDashboardWrapper />} />
           </Routes>
         </main>
       </div>
