@@ -92,8 +92,8 @@ export function DecisionTool() {
             <div className="flex flex-col space-y-3">
               {result.requiresMTSS && (
                 <Link
-                  to="/register"
-                  className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 text-center"
+                to="/start-referral"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 text-center"
                 >
                   Begin MTSS Referral
                 </Link>
