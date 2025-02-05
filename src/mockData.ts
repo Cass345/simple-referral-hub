@@ -25,7 +25,7 @@ export const mockStudentProfile: StudentProfile = {
   parent_name: "Robert Johnson",
   parent_email: "robert.johnson@email.com",
   parent_phone: "555-0123",
-  language: "English",
+  primary_language: "English",
   goals: [
     "Improve reading comprehension",
     "Complete tasks within given timeframe",
