@@ -38,7 +38,7 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
       // Format the data
       const formattedData = {
         ...formData,
-        student_id: parseInt(formData.student_id) || 0, // Convert to number
+        student_id: formData.student_id, // Keep as string
         date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString() : null,
         created_by: session.user.id,
         updated_at: new Date().toISOString()
@@ -166,4 +166,4 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
       </form>
     </div>
   );
-}
+};

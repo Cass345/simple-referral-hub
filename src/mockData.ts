@@ -2,7 +2,7 @@ import type { StudentProfile } from '@/types/database.types';
 
 export const mockStudentProfile: StudentProfile = {
   id: "1",
-  student_id: 2024001, // Changed to number
+  student_id: "2024001", // Changed to string
   first_name: "Michael",
   last_name: "Johnson",
   grade: "4",
@@ -31,7 +31,7 @@ export const mockStudentProfile: StudentProfile = {
     "Complete tasks within given timeframe",
     "Follow classroom routines"
   ],
-  mtss_tier: 2,
+  mtss_tier: "2", // Changed to string
   teacherInfo: {
     teacherName: "Sarah Johnson",
     grade: 4,
