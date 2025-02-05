@@ -17,7 +17,6 @@ export const StudentDashboardWrapper = () => {
       if (!id) return;
 
       try {
-        // Query by student_id (numeric) instead of UUID
         const { data, error } = await supabase
           .from('students')
           .select('*')
@@ -36,7 +35,13 @@ export const StudentDashboardWrapper = () => {
           return;
         }
 
-        setStudent(data);
+        // Convert concerns to array if it's a string
+        const formattedData: StudentProfile = {
+          ...data,
+          concerns: Array.isArray(data.concerns) ? data.concerns : data.concerns ? [data.concerns] : []
+        };
+
+        setStudent(formattedData);
       } catch (error) {
         console.error('Error fetching student:', error);
         toast({

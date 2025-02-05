@@ -16,7 +16,7 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
     last_name: initialData?.last_name || '',
     grade: initialData?.grade || '',
     date_of_birth: initialData?.date_of_birth ? new Date(initialData.date_of_birth).toISOString().split('T')[0] : '',
-    student_id: initialData?.student_id || '',
+    student_id: initialData?.student_id?.toString() || '',
     referring_teacher: initialData?.referring_teacher || ''
   });
 
@@ -24,7 +24,6 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
     e.preventDefault();
     
     try {
-      // First check if we're authenticated
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -39,6 +38,7 @@ export function TeacherInfo({ onSubmit, initialData }: TeacherInfoProps) {
       // Format the data
       const formattedData = {
         ...formData,
+        student_id: parseInt(formData.student_id) || 0, // Convert to number
         date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString() : null,
         created_by: session.user.id,
         updated_at: new Date().toISOString()

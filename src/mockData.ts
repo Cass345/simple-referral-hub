@@ -2,7 +2,7 @@ import type { StudentProfile } from '@/types/database.types';
 
 export const mockStudentProfile: StudentProfile = {
   id: "1",
-  student_id: "STU2024001",
+  student_id: 2024001, // Changed to number
   first_name: "Michael",
   last_name: "Johnson",
   grade: "4",
