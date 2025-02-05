@@ -44,7 +44,7 @@ export interface Database {
 
 export interface StudentProfile {
   id: string;
-  student_id: number;  // Changed from string to number to match database
+  student_id: number;
   first_name: string;
   last_name: string;
   grade?: string;
@@ -70,6 +70,14 @@ export interface StudentProfile {
   };
   studentBackground?: StudentBackgroundData;
   referralReason?: ReferralFormData;
+  classroom?: string;
+  current_supports?: string;
+  gender?: string;
+  notes?: string;
+  created_at?: string;
+  user_id?: string;
+  teacher_id?: string;
+  strengths?: string;
 }
 
 export interface StudentBackgroundData {

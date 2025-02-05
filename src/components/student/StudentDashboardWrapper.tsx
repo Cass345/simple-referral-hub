@@ -35,9 +35,11 @@ export const StudentDashboardWrapper = () => {
           return;
         }
 
-        // Convert concerns to array if it's a string
+        // Format the data to match StudentProfile interface
         const formattedData: StudentProfile = {
           ...data,
+          student_id: parseInt(data.student_id) || 0,
+          mtss_tier: data.mtss_tier ? parseInt(data.mtss_tier) : undefined,
           concerns: Array.isArray(data.concerns) ? data.concerns : data.concerns ? [data.concerns] : []
         };
 
