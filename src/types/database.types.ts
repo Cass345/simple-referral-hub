@@ -52,7 +52,7 @@ export interface StudentProfile {
   parent_name?: string;
   parent_email?: string;
   parent_phone?: string;
-  language?: string;
+  primary_language?: string;
   referring_teacher?: string;
   referral_reasons?: string[];
   concerns?: string[];
