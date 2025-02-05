@@ -10,6 +10,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { User, Activity, Shield, Flag } from "lucide-react";
 import type { StudentProfile } from "@/types/database.types";
 
+interface StudentDashboardProps {
+  student: StudentProfile;
+}
+
 export function StudentDashboard({ student }: StudentDashboardProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [dataType, setDataType] = useState("baseline");
@@ -154,7 +158,7 @@ export function StudentDashboard({ student }: StudentDashboardProps) {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Primary Language</p>
-                <p className="font-medium">{student.language || 'Not specified'}</p>
+                <p className="font-medium">{student.primary_language || 'Not specified'}</p>
               </div>
             </div>
           </Card>
