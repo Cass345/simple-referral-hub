@@ -44,11 +44,11 @@ export interface Database {
 
 export interface StudentProfile {
   id: string;
-  student_id: string;
+  student_id: number;  // Changed from string to number to match database
   first_name: string;
   last_name: string;
-  grade: string;
-  date_of_birth: string;
+  grade?: string;
+  date_of_birth?: string;
   parent_name?: string;
   parent_email?: string;
   parent_phone?: string;
