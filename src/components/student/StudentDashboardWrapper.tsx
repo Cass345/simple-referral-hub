@@ -17,10 +17,16 @@ export const StudentDashboardWrapper = () => {
       if (!id) return;
 
       try {
+        // Convert id to number for the query since the database expects a number
+        const studentId = parseInt(id);
+        if (isNaN(studentId)) {
+          throw new Error("Invalid student ID");
+        }
+
         const { data, error } = await supabase
           .from('students')
           .select('*')
-          .eq('student_id', id)
+          .eq('student_id', studentId)
           .maybeSingle();
 
         if (error) throw error;
@@ -38,8 +44,8 @@ export const StudentDashboardWrapper = () => {
         // Format the data to match StudentProfile interface
         const formattedData: StudentProfile = {
           ...data,
-          student_id: data.student_id.toString(),
-          mtss_tier: data.mtss_tier?.toString(),
+          student_id: data.student_id?.toString() || "",
+          mtss_tier: data.mtss_tier?.toString() || "",
           concerns: Array.isArray(data.concerns) ? data.concerns : data.concerns ? [data.concerns] : []
         };
 
