@@ -20,7 +20,7 @@ export const StudentDashboardWrapper = () => {
         const { data, error } = await supabase
           .from('students')
           .select('*')
-          .eq('student_id', parseInt(id))
+          .eq('student_id', id)
           .maybeSingle();
 
         if (error) throw error;
@@ -38,8 +38,8 @@ export const StudentDashboardWrapper = () => {
         // Format the data to match StudentProfile interface
         const formattedData: StudentProfile = {
           ...data,
-          student_id: parseInt(data.student_id) || 0,
-          mtss_tier: data.mtss_tier ? parseInt(data.mtss_tier) : undefined,
+          student_id: data.student_id.toString(),
+          mtss_tier: data.mtss_tier?.toString(),
           concerns: Array.isArray(data.concerns) ? data.concerns : data.concerns ? [data.concerns] : []
         };
 

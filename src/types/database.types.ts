@@ -44,7 +44,7 @@ export interface Database {
 
 export interface StudentProfile {
   id: string;
-  student_id: number;
+  student_id: string; // Changed back to string since form data comes as string
   first_name: string;
   last_name: string;
   grade?: string;
@@ -58,7 +58,7 @@ export interface StudentProfile {
   concerns?: string[];
   interventions?: any[];
   behavior_data?: BehaviorData[];
-  mtss_tier?: number;
+  mtss_tier?: string; // Changed to string to match database
   goals?: string[];
   created_by?: string;
   updated_at?: string;
