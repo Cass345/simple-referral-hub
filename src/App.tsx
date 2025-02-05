@@ -22,7 +22,7 @@ import EvaluateBehavior from "./pages/EvaluateBehavior";
 import Login from "./pages/Login";
 import { DecisionTool } from "./pages/DecisionTool";
 import Dashboard from "./pages/Dashboard";
-import { StudentDashboard } from "./components/student/StudentDashboard";
+import { StudentDashboardWrapper } from "./components/student/StudentDashboardWrapper";
 
 const AppContent = () => {
   const { user } = useAuth();
